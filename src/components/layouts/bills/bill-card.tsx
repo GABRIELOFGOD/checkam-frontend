@@ -46,11 +46,11 @@ const BillCard = ({ bill }: { bill: BillType }) => {
       <div className='w-full my-auto flex flex-col gap-2'>
         <p className='text-xl md:text-2xl font-bold'>{bill.title}</p>
         <div>
-          <p className='italic font-semibold text-foreground/80'>Bill in Summary</p>
-          <p className='text-sm text-muted'>{bill.summary}</p>
+          <p className='italic font-semibold text-foreground/80 line-clamp-2'>Bill in Summary</p>
+          <p className='text-sm text-muted line-clamp-4'>{bill.summary}</p>
         </div>
         <div className="flex justify-between mt-2">
-          <div className="flex gap-3">
+          <div className="flex gap-3 my-auto">
             <div className="rounded-full border border-border py-1 px-3 bg-accent text-accent-foreground text-sm font-semibold italic capitalize">{bill.category}</div>
             <div className="rounded-full border border-border py-1 px-3 bg-accent text-accent-foreground text-sm font-semibold italic capitalize">{bill.stage}</div>
           </div>

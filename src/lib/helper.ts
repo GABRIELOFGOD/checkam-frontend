@@ -4,9 +4,17 @@ export function slugify(title: string): string {
   return title
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, '')        // Remove all non-alphanumeric, non-space, non-hyphen chars
-    .replace(/[\s_-]+/g, '-')            // Replace spaces, underscores, and multiple hyphens with a single hyphen
-    .replace(/^-+|-+$/g, '');            // Trim hyphens from start and end
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function unslugify(slug: string): string {
+  return slug
+    .replace(/-/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, char => char.toUpperCase());
 }
 
 
