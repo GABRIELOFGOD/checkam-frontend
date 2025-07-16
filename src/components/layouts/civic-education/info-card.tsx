@@ -1,5 +1,5 @@
 import { InfographicType } from "@/data/infographics";
-import { VideoType } from "@/data/videos";
+// import { VideoType } from "@/data/videos";
 import Image from "next/image";
 
 const InfoCard = ({ info, height="h-[402px]" }: { info: InfographicType, height?: string }) => {
