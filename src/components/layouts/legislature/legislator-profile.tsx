@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { legislators, LegislatorType } from "@/data/legislator";
 import { unslugify } from "@/lib/helper";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,6 +12,8 @@ import { IoIosMail, IoLogoFacebook, IoLogoLinkedin } from "react-icons/io";
 
 const LegislatorProfileComp = ({ name }: { name: string }) => {
   const [legislator, setLegislator] = useState<LegislatorType | null>(null);
+  const [viewBio, setViewBio] = useState<boolean>(false);
+  const [projects, setProjects] = useState([]);
   
   /**
    * Attempts to find the best matching legislator based on the provided `name` slug.
@@ -41,43 +44,67 @@ const LegislatorProfileComp = ({ name }: { name: string }) => {
     }
   }
 
+  const toggleBio = () => setViewBio(!viewBio);
+
   useEffect(() => {
     getLegislator();
+    setProjects([]);
   }, []);
   
   return (
     <div>
       {legislator ? (
         <div className="flex flex-col gap-5">
-          <div className="flex gap-5 bg-gray-100 rounded-md p-4 w-full">
+            <div className="flex flex-col md:flex-row gap-5 bg-gray-100 rounded-md p-4 w-full">
             <Image
               src={legislator.image || ""}
               alt={legislator.name}
               width={300}
               height={300}
+              className="w-full md:w-[300px] h-auto object-cover rounded"
             />
             <div className="flex my-auto flex-col">
               <h2 className="flex text-2xl font-extrabold">{legislator.name}</h2>
               <p className="text-card-foreground/80 font-semibold">{legislator.office} <span className="italic text-secondary">({legislator.constituency})</span></p>
               {legislator.socials && (<div className="mt-2 w-full flex justify-start gap-2 text-gray-400">
-                {legislator.socials.facebook && (<Link className="my-auto" href={legislator.socials.facebook}>
-                  <IoLogoFacebook size={30} />
-                </Link>)}
-                {legislator.socials.linkedIn && (<Link className="my-auto" href={legislator.socials.linkedIn}>
-                  <IoLogoLinkedin size={31} />
-                </Link>)}
-                {legislator.socials.x && (<Link className="my-auto" href={legislator.socials.x}>
-                  <FaSquareXTwitter size={26} />
-                </Link>)}
-                {legislator.socials.mail && (<Link className="my-auto" href={`mailto: ${legislator.socials.mail}`}>
-                  <IoIosMail size={35} />
-                </Link>)}
+              {legislator.socials.facebook && (<Link className="my-auto" href={legislator.socials.facebook}>
+                <IoLogoFacebook size={30} />
+              </Link>)}
+              {legislator.socials.linkedIn && (<Link className="my-auto" href={legislator.socials.linkedIn}>
+                <IoLogoLinkedin size={31} />
+              </Link>)}
+              {legislator.socials.x && (<Link className="my-auto" href={legislator.socials.x}>
+                <FaSquareXTwitter size={26} />
+              </Link>)}
+              {legislator.socials.mail && (<Link className="my-auto" href={`mailto: ${legislator.socials.mail}`}>
+                <IoIosMail size={35} />
+              </Link>)}
               </div>)}
 
+              {legislator.bio && (
+              <p className="text-gray-700 mt-3 text-sm">
+                <span className={cn(!viewBio && "line-clamp-2")}>{legislator.bio}</span>
+                <span onClick={toggleBio} className="text-primary font-bold underline cursor-pointer ml-2">{viewBio ? "Read less" : "Read more"}</span>
+              </p>
+              )}
+
               <Button
-                className="mt-5 w-fit"
+              className="mt-5 w-fit"
               >Send direct message</Button>
             </div>
+            </div>
+
+          <div>
+            <h2 className="text-xl font-bold">Projects</h2>
+            {projects.length > 0 ? (
+              <ul className="list-disc pl-5">
+                {projects.map((project, index) => (
+                  <li key={index} className="text-gray-700">{project}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No projects available.</p>
+            )}
           </div>
         </div>
       ) : (

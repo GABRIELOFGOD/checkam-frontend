@@ -2,7 +2,8 @@ export interface LegislatorType {
   name: string;
   image?: string;
   constituency: Constituencies;
-  office: LegislativeOffice
+  office: LegislativeOffice;
+  bio?: string;
   socials?: {
     facebook?: string;
     linkedIn?: string;
@@ -33,7 +34,8 @@ export const legislators: LegislatorType[] = [
     name: "Hon. Afeez Abiodun Ibrahim",
     image: "/images/afeez.jpg",
     constituency: Constituencies.AKORAYE,
-    office: LegislativeOffice.CHIEF_WHIP
+    office: LegislativeOffice.CHIEF_WHIP,
+    bio: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   },
   {
     name: "Hon. Adekunle Emmanuel Oladimeji",
@@ -45,13 +47,15 @@ export const legislators: LegislatorType[] = [
       linkedIn: "#",
       x: "#",
       mail: "#"
-    }
+    },
+    bio: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
   },
   {
     name: "Hon. Olawale Oladipupo Akerele",
     image: "/images/olawale.jpg",
     constituency: Constituencies.IFE_NORTH,
     office: LegislativeOffice.SPEAKER,
+    bio: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     socials: {
       facebook: "#",
       x: "#",
@@ -63,6 +67,7 @@ export const legislators: LegislatorType[] = [
     image: "/images/kofoworola.jpg",
     constituency: Constituencies.EDE,
     office: LegislativeOffice.MAJORITY_LEADER,
+    bio: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     socials: {
       facebook: "#",
       x: "#",
@@ -78,6 +83,7 @@ export const legislators: LegislatorType[] = [
       linkedIn: "#",
       x: "#",
       mail: "#"
-    }
+    },
+    bio: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   }
 ]

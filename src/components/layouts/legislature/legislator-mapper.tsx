@@ -17,7 +17,7 @@ const LegislatorMapper = ({ legislators }: { legislators: LegislatorType[] }) =>
       {legislators.map((item, i) => (
         <Link
           key={i}
-          href={`/legislatures/${slugify(item.name)}`}
+          href={`/legislators/${slugify(item.name)}`}
         >
           <LegislatorCard
             legislator={item}
