@@ -12,14 +12,17 @@ import { useEffect, useState } from "react";
 import { BillType } from "@/data/bills";
 import { bills as allBills } from "@/data/bills";
 import PagesTop from "../pages-top";
+import { useUser } from "@clerk/nextjs";
 
 const Bills = () => {
   const [bills, setBills] = useState<BillType[]>([]);
   const [billSearch, setBillSearch] = useState<string>("");
+  const { user } = useUser();
 
   useEffect(() => {
     setBills(allBills);
-  }, []);
+    console.log("[USER] ", user?.publicMetadata);
+  }, [user]);
   
   return (
     <div>

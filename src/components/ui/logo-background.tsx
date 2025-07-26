@@ -1,8 +1,9 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const LogoBackGround = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("h-full w-full absolute flex items-center justify-center opacity-50")}>
+    <div className={cn("h-full w-full absolute flex items-center justify-center opacity-50", className)}>
       <Image
         src={"/brand/checkam_logo.png"}
         alt="Logo"

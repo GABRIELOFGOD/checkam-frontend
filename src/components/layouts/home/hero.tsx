@@ -24,7 +24,7 @@ const Hero = () => {
           />
         </div>
         <div className="flex-1">
-          <div className="h-fit md:h-[65vh] md:rounded-xl right-0 w-full justify-center md:w-[500px] flex flex-col gap-5 bg-primary text-white p-10 md:absolute relative animate-bounce/30 my-auto md:top-1/6 md:shadow-md">
+          <div className="h-fit md:h-[65vh] md:rounded-xl right-0 w-full justify-center md:w-[500px] flex flex-col gap-5 bg-primary text-white p-10 md:absolute relative animate-bounce/30 my-auto md:top-1/8 md:shadow-md">
             <p className="text-secondary font-semibold">Engaging citizens in government in Osun State</p>
             <div className="flex flex-col gap-2">
               <p className="md:text-5xl text-3xl font-bold text-shadow-sm">Track Bills. Engage Legislature. Own Your Future.</p>
