@@ -29,7 +29,7 @@ const formSchema = z.object({
 });
 
 const MyLoginForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
   // const { isLoggedIn, user } = useGlobalContext();
   // const router = useRouter();
   
