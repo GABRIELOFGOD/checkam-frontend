@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs';
 
 const MenuList = () => {
   const listItems = [
@@ -18,7 +25,21 @@ const MenuList = () => {
       ))}
 
       <div>
-        <Button>Get started</Button>
+        <SignedOut>
+          <SignInButton />
+          <SignUpButton>
+            <Button
+              className="ml-5"
+            >
+              <Link href={"/register"}>
+                Get started
+              </Link>
+            </Button>
+          </SignUpButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </div>
     </div>
   )
