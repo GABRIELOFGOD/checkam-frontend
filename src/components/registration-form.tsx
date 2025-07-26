@@ -45,7 +45,7 @@ const formSchema = z.object({
 export type RegistrationFormType = z.infer<typeof formSchema>;
 
 const RegistrationForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
   // const { registerUser } = useAuth();
   
   const form = useForm<RegistrationFormType>({
