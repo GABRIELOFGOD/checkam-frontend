@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { UserProvider } from "@/providers/user-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Manrope({
   variable: "--font-geist-sans",
@@ -28,13 +30,16 @@ export default function RootLayout({
 }>) {
   return (
     // <ClerkProvider>
+    <UserProvider>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           {children}
+          <Toaster position="top-right" />
         </body>
       </html>
+    </UserProvider>  
     // </ClerkProvider>
   );
 }

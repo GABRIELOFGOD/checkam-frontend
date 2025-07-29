@@ -9,7 +9,7 @@ const MainLayout = ({
   return (
     <div>
       <Header />
-      <div className="py-20">
+      <div className="py-16">
         {children}
       </div>
     </div>

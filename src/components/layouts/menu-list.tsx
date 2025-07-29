@@ -1,20 +1,26 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "../ui/button";
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs';
+import { useUser } from "@/providers/user-provider";
+import { User } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
 const MenuList = () => {
+  const { isLoaded, user } = useUser();
+  const router = useRouter();
+
   const listItems = [
     {name: "Home", href: "/"},
     {name: "Bills", href: "/bills"},
     {name: "Legislators", href: "/legislators"},
     {name: "Civic Education", href: "/civic-education"},
   ]
+
+  const path = usePathname();
+  const gotoLogin = () => {
+    router.push(`/login?back=${path}`)
+  }
   
   return (
     <div className="flex gap-5 flex-col md:flex-row md:my-auto">
@@ -25,21 +31,19 @@ const MenuList = () => {
       ))}
 
       <div>
-        <SignedOut>
-          <SignInButton />
-          <SignUpButton>
-            <Button
-              className="ml-5"
-            >
-              <Link href={"/register"}>
-                Get started
-              </Link>
-            </Button>
-          </SignUpButton>
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
+        {isLoaded && !user ? (<Button
+          className="ml-5"
+          onClick={gotoLogin}
+        >
+          Get started
+        </Button>) : (
+          <Button
+            variant={"outline"}
+            className="rounded-full flex items-center justify-center h-8 w-8 my-auto"
+          >
+            <User />
+          </Button>
+        )}
       </div>
     </div>
   )

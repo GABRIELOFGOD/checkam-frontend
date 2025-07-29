@@ -18,6 +18,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState } from "react";
+import { REGISTERURL } from "@/utils/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { isError } from "@/lib/helper";
 // import { useAuth } from "@/hooks/useAuth";
 
 const formSchema = z.object({
@@ -45,7 +49,8 @@ const formSchema = z.object({
 export type RegistrationFormType = z.infer<typeof formSchema>;
 
 const RegistrationForm = () => {
-  const [isSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
   // const { registerUser } = useAuth();
   
   const form = useForm<RegistrationFormType>({
@@ -60,15 +65,37 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = async (data: RegistrationFormType) => {
-    console.log(data);
-    // setIsSubmitting(true);
-    // try {
-    //   // Remove confirmPassword before sending to backend
-    //   const { confirmPassword, ...registrationData } = data;
-    //   await registerUser(registrationData);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+    setIsSubmitting(true);
+    try {
+      const req = await fetch(REGISTERURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fname: data.fname,
+          lname: data.lname,
+          email: data.email,
+          password: data.password
+        })
+      });
+
+      const res = await req.json();
+      if (!req.ok) throw new Error(res.error);
+      if (res.error) throw new Error(res.error);
+
+      toast.success(res.message);
+      router.push("/login");
+    } catch(error: unknown) {
+      if (isError(error)) {
+        toast.error(error.message);
+        console.error("Login failed", error.message);
+      } else {
+        console.error("Unknown error", error);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (

@@ -16,12 +16,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-// import { useGlobalContext } from "@/context/GlobalContext";
-// import { useRouter } from "next/navigation";
-// import { UserRole } from "@/types/user";
+import { useSearchParams } from "next/navigation";
+import { isError } from "@/lib/helper";
+import { toast } from "sonner";
+import { LOGINURL } from "@/utils/constants";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }),
@@ -29,11 +29,10 @@ const formSchema = z.object({
 });
 
 const MyLoginForm = () => {
-  const [isSubmitting] = useState(false);
-  // const { isLoggedIn, user } = useGlobalContext();
-  // const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const param = useSearchParams();
+  const previousPage = param.get("back");
   
-  // const { login } = useAuth();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,29 +42,35 @@ const MyLoginForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    // setIsSubmitting(true);
-    // try {
-    //   await login(data.email, data.password);
-    //   if (user?.role === UserRole.ADMIN) {
-    //     router.push("/admin");
-    //   } else if (user?.role === UserRole.TEACHER) {
-    //     router.push("/teacher");
-    //   } else if (user?.role === UserRole.STUDENT) {
-    //     router.push("/learner");
-    //   }
-    // } catch (error) {
-    //   console.error("Login failed:", error);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
-  }
+    setIsSubmitting(true);
+    try {
+      const req = await fetch(LOGINURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     router.push("/");
-  //   }
-  // }, [isLoggedIn]);
+      const res = await req.json();
+      if (!req.ok || res.error) throw new Error(res.error);
+      
+      if (res.token) {
+        localStorage.setItem("token", res.token);
+      }
+      toast.success(res.message);
+      location.assign(previousPage ? previousPage : "/");
+    } catch (error: unknown) {
+      if (isError(error)) {
+        toast.error(error.message);
+        console.error("Login failed", error.message);
+      } else {
+        console.error("Unknown error", error);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
   
   return (
     <div>

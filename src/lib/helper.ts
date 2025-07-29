@@ -21,3 +21,8 @@ export function unslugify(slug: string): string {
 export const changeSearch = (setState: Dispatch<SetStateAction<string>>, value: ChangeEvent<HTMLInputElement>) => {
   setState(value.target.value);
 }
+
+export function isError(err: unknown): err is Error {
+  return err instanceof Error;
+}
+

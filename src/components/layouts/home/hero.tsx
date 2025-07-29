@@ -17,7 +17,7 @@ const Hero = () => {
       <div className="flex flex-col md:flex-row h-full relative">
         <div className="flex-[3] h-full w-full relative">
           <Image
-            src="/images/osun2.webp"
+            src="/images/house.JPG"
             alt="Hero image"
             layout="fill"
             objectFit="object-cover"
