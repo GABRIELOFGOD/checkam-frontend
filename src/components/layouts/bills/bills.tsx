@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { BillType } from "@/data/bills";
 import { bills as allBills } from "@/data/bills";
 import PagesTop from "../pages-top";
-import { useUser } from "@clerk/nextjs";
+import { useUser } from "@/providers/user-provider";
 
 const Bills = () => {
   const [bills, setBills] = useState<BillType[]>([]);
@@ -21,7 +21,6 @@ const Bills = () => {
 
   useEffect(() => {
     setBills(allBills);
-    console.log("[USER] ", user?.publicMetadata);
   }, [user]);
   
   return (

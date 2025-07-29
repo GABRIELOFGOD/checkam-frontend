@@ -9,7 +9,6 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
@@ -53,17 +52,17 @@ const data = {
     {
       title: "Users",
       url: "/dashboard/users",
-      icon: IconChartBar,
+      icon: IconUsers,
     },
     {
       title: "Feedbacks",
       url: "/dashboard/feedbacks",
-      icon: IconFolder,
+      icon: IconChartBar,
     },
     {
       title: "Settings",
       url: "/dashboard/settings",
-      icon: IconUsers,
+      icon: IconSettings,
     },
   ],
   navClouds: [
