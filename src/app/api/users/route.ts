@@ -1,4 +1,5 @@
 // app/api/users/route.ts
+import { connectToDatabase } from '@/config/database';
 import { User } from '@/models/user';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -6,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
+  await connectToDatabase();
 
   if (id) {
     // Find one by id
@@ -24,6 +26,7 @@ export async function GET(request: NextRequest) {
 // POST /api/users - create user
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  await connectToDatabase();
   try {
     const user = await User.create(body);
     return NextResponse.json(user, { status: 201 });
@@ -36,6 +39,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
+  await connectToDatabase();
   if (!id) {
     return NextResponse.json({ message: 'User id is required' }, { status: 400 });
   }
@@ -55,6 +59,7 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
+  await connectToDatabase();
   if (!id) {
     return NextResponse.json({ message: 'User id is required' }, { status: 400 });
   }

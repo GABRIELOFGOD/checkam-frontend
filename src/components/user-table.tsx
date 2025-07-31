@@ -26,12 +26,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { IUser } from '@/models/user'
-import { ALLUSERS } from '../utils/constants'
-import { isError } from '@/lib/helper'
-import { toast } from 'sonner'
-import { useUser } from '@/providers/user-provider'
-import { useRouter, usePathname } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { useAdmin } from '@/providers/admin-provider'
 
 // interface UserTableProps {
 //   data: IUser[]
@@ -40,43 +36,8 @@ import { Loader2 } from 'lucide-react'
 export function UserTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [data, setData] = React.useState<IUser[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(true);
   
-  const router = useRouter();
-  const path = usePathname();
-
-  const { isLoaded, user } = useUser();
-
-  const fetchUsers = async () => {
-    try {
-      const req = await fetch(ALLUSERS, { next: { revalidate: 60*60 } });
-      const res = await req.json();
-      setData(res);
-    } catch (error: unknown) {
-      if (isError(error)) {
-        toast.error(error.message);
-        console.error("Login failed", error.message);
-      } else {
-        console.error("Unknown error", error);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  React.useEffect(() => {
-    if (isLoaded && !user) {
-      router.push(`/login?back=${path}`);
-    // } else {
-    //   if (isLoaded && user?.role !== "admin") {
-    //     router.push("/");
-      } else {
-        fetchUsers();
-      }
-    // }
-    
-  }, [isLoaded]);
+  const { users } = useAdmin();
 
   const columns: ColumnDef<IUser>[] = [
     {
@@ -133,8 +94,8 @@ export function UserTable() {
     },
   ]
 
-  const table = useReactTable({
-    data,
+  const table = useReactTable<IUser>({
+    data: users.data,
     columns,
     state: {
       sorting,
@@ -170,7 +131,11 @@ export function UserTable() {
       </div>
 
       <div className="rounded-md border">
-        {loading ? (
+        { users.error ? (
+          <div className='w-full h-[200px] flex gap-3 justify-center items-center'>
+            <p className="font-bold text-sm my-auto">Error fetching users</p>
+          </div>)
+         : users.loading ? (
           <div className='w-full h-[200px] flex gap-3 justify-center items-center'>
             <Loader2 className="animate-spin my-auto" size={15} />
             <p className="font-semibold text-sm my-auto">Loading users</p>

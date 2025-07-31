@@ -7,27 +7,30 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
+import { AdminProvider } from "@/providers/admin-provider"
 
 // import data from "./data.json"
 import { ReactNode } from "react"
 
 export default function Page({ children }: { children: ReactNode }) {
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          {children}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    <AdminProvider>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 72)",
+            "--header-height": "calc(var(--spacing) * 12)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            {children}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </AdminProvider>
   )
 }
