@@ -8,6 +8,7 @@ import {
   IconDatabase,
   IconFileAi,
   IconFileDescription,
+  IconFileInvoice,
   IconFileWord,
   IconHelp,
   IconInnerShadowTop,
@@ -53,6 +54,11 @@ const data = {
       title: "Users",
       url: "/dashboard/users",
       icon: IconUsers,
+    },
+    {
+      title: "Bills",
+      url: "/dashboard/bills",
+      icon: IconFileInvoice,
     },
     {
       title: "Feedbacks",

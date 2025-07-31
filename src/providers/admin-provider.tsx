@@ -1,10 +1,11 @@
 "use client";
 
 import { IUser } from "@/models/user";
-import { ALLUSERS } from "@/utils/constants";
+import { ALLBILLS, ALLUSERS } from "@/utils/constants";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useUser } from "./user-provider";
 import { usePathname, useRouter } from "next/navigation";
+import { IBill } from "@/models/bill";
 
 export type UserDataProp = {
   data: IUser[];
@@ -12,8 +13,15 @@ export type UserDataProp = {
   loading: boolean;
 };
 
+export type BillDataProp = {
+  data: IBill[];
+  error: boolean;
+  loading: boolean;
+};
+
 type AdminContextType = {
   users: UserDataProp;
+  bills: BillDataProp;
   adminLoads: boolean;
 };
 
@@ -26,7 +34,7 @@ type AdminProviderProps = {
 export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
   const [adminLoads, setAdminLoads] = useState<boolean>(false);
   const [users, setUsers] = useState<UserDataProp>({ data: [], error: false, loading: true });
-  // const [bills, setBils] = useState([]);
+  const [bills, setBills] = useState<BillDataProp>({ data: [], error: false, loading: true });
   // const [infographs, setInfoGraphs] = useState([]);
 
   const { isLoaded, user } = useUser();
@@ -47,6 +55,20 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     }
   }
 
+  const getBills = async () => {
+    try {
+      const req = await fetch(ALLBILLS, { next: { revalidate: 3600 } });
+      const res = await req.json();
+      if (!req.ok || res.error) throw new Error(res.error);
+      setBills((prev) => ({ ...prev, data: res as IBill[] }));
+    } catch (error) {
+      console.log("[USERS ERROR] ", error);
+      setBills((prev) => ({ ...prev, error: true }));
+    } finally {
+      setBills((prev) => ({ ...prev, loading: false }));
+    }
+  }
+
   useEffect(() => {
     if (isLoaded && !user) {
       router.push(`/login?back=${path}`);
@@ -56,13 +78,14 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
       } else {
         setAdminLoads(true);
         getUsers();
+        getBills();
       }
     }
     
   }, [isLoaded]);
 
   return (
-    <AdminContext.Provider value={{ users, adminLoads }}>
+    <AdminContext.Provider value={{ users, adminLoads, bills }}>
       {children}
     </AdminContext.Provider>
   );

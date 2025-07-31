@@ -14,7 +14,7 @@ const UserContent = () => {
           <p className="font-bold text-sm my-auto">Error fetching users</p>
         </div>)
         : users.loading ? (
-        <div className='w-full h-full flex gap-3 justify-center items-center'>
+        <div className='w-full h-[200px] flex gap-3 justify-center items-center'>
           <Loader2 className="animate-spin my-auto" size={15} />
           <p className="font-bold text-sm my-auto">Loading users</p>
         </div>

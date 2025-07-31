@@ -1,6 +1,7 @@
 "use client";
 
 import ContentCard from "@/components/content-card";
+import BillContents from "@/components/layouts/dashboard/content/bill-content";
 import UserContent from "@/components/layouts/dashboard/content/user-content";
 import ContentSectionCard from "@/components/ui/content-section-card";
 import { useRouter } from "next/navigation";
@@ -22,7 +23,7 @@ const ContentManagement = () => {
         />
         <ContentCard
           title="Bills"
-          content={<p>No content yet!</p>}
+          content={<BillContents />}
           button={{
             text: "View more",
             onButtonClick: () => {router.push("/dashboard/users")}
