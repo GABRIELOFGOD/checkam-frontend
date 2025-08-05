@@ -59,6 +59,7 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     try {
       const req = await fetch(ALLBILLS, { next: { revalidate: 3600 } });
       const res = await req.json();
+      console.log("RES ", res)
       if (!req.ok || res.error) throw new Error(res.error);
       setBills((prev) => ({ ...prev, data: res as IBill[] }));
     } catch (error) {
