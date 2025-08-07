@@ -106,6 +106,7 @@ const CreateBill = () => {
       setFileName(null);
       setImagePreview(null);
       setErrors({});
+      location.assign("/dashboard/bills")
     } catch (err) {
       console.error("Submission error", err);
     } finally {

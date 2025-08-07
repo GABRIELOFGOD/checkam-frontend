@@ -25,7 +25,7 @@ const AdminBillMapper = () => {
           <p className="text-gray-400 italic font-bold">No bills yet!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {bills.data.map((bill, i) => (
             <AdminBillCard
               key={i}
