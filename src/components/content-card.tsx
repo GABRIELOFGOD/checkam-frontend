@@ -17,7 +17,7 @@ const ContentCard = ({ title, content, button }: ContentCardType) => {
         <h2 className="text-lg font-bold my-auto text-white">{title}</h2>
         {button && (<Button size={"sm"} variant={"outline"} onClick={button.onButtonClick}>{button.text}</Button>)}
       </div>
-      <div className="p-3 h-[300px]">{content}</div>
+      <div className="p-3 h-[300px] w-full overflow-y-auto">{content}</div>
     </div>
   )
 }

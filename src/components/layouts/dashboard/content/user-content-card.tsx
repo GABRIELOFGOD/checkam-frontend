@@ -14,7 +14,7 @@ const UserContentCard = ({ user }: { user: IUser }) => {
   return (
     <div className="flex gap-3 justify-between bg-border/60 hover:bg-border duration-200 ease-in-out px-3 py-2 cursor-pointer rounded-sm">
       <div className="flex gap-3">
-        <div className="my-auto h-12 w-12 rounded-full overflow-hidden flex justify-center items-center bg-muted">
+        <div className="my-auto h-12 w-12 relative rounded-full overflow-hidden flex justify-center items-center bg-muted">
           {user.image ? (
             <Image
               src={user.image}

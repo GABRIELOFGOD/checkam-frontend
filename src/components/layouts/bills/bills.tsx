@@ -9,18 +9,31 @@ import {
 } from "@/components/ui/select";
 import BillsMapper from "./bills-mapper";
 import { useEffect, useState } from "react";
-import { BillType } from "@/data/bills";
-import { bills as allBills } from "@/data/bills";
 import PagesTop from "../pages-top";
 import { useUser } from "@/providers/user-provider";
+import { toast } from "sonner";
+import { ALLBILLS } from "@/utils/constants";
+import { IBill } from "@/models/bill";
 
 const Bills = () => {
-  const [bills, setBills] = useState<BillType[]>([]);
+  const [bills, setBills] = useState<IBill[]>([]);
   const [billSearch, setBillSearch] = useState<string>("");
   const { user } = useUser();
 
+  const fetchAllBills = async () => {
+    try {
+      const req = await fetch(ALLBILLS);
+      const res = await req.json();
+      if (!req.ok) throw new Error(res.error);
+      setBills(res);
+    } catch (error) {
+      toast.error("Error fetching all bills, check your internet and reload");
+      console.log("ERROR FETCHING BILLS", error);
+    }
+  }
+
   useEffect(() => {
-    setBills(allBills);
+    fetchAllBills();
   }, [user]);
   
   return (

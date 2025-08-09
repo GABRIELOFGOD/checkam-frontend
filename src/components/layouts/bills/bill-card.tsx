@@ -1,36 +1,36 @@
 import { Button } from '@/components/ui/button';
-import { BillType } from '@/data/bills';
+import { IBill } from '@/models/bill';
 import { Download } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react'
 
-const BillCard = ({ bill }: { bill: BillType }) => {
+const BillCard = ({ bill }: { bill: IBill }) => {
 
   // TODO: For production
-  // const handleDownload = async () => {
-  //   const fileUrl = 'https://example.com/bill.pdf';
-  //   const response = await fetch(fileUrl);
-  //   const blob = await response.blob();
-  //   const url = window.URL.createObjectURL(blob);
+  const handleDownload = async () => {
+    const fileUrl = bill.file;
+    const response = await fetch(fileUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
 
-  //   const link = document.createElement('a');
-  //   link.href = url;
-  //   link.download = 'Your_Bill.pdf';
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   link.remove();
-  //   window.URL.revokeObjectURL(url);
-  // };
-
-  const handleDownload = () => {
-    const fileUrl = '/documents/example.pdf'; // For dev: in public folder; For prod: replace with full URL
     const link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = 'Your_Bill.pdf'; // suggested file name
+    link.href = url;
+    link.download = `${bill.title}.pdf`;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    link.remove();
+    window.URL.revokeObjectURL(url);
   };
+
+  // const handleDownload = () => {
+  //   const fileUrl = '/documents/example.pdf'; // For dev: in public folder; For prod: replace with full URL
+  //   const link = document.createElement('a');
+  //   link.href = fileUrl;
+  //   link.download = 'Your_Bill.pdf'; // suggested file name
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
   
   return (
     <div className='flex flex-col md:flex-row gap-5 w-full h-fit'>

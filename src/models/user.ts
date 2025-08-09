@@ -8,7 +8,7 @@ export interface IUser extends Document {
   image?: string | null;
   createdAt: Date;
   updatedAt: Date;
-  role?: 'user' | 'admin';
+  role?: 'user' | 'admin' | 'legislator';
   password: string;
 }
 

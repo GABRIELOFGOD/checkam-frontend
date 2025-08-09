@@ -31,9 +31,12 @@ const MenuList = () => {
     router.push(`/login?back=${path}`)
   }
 
-  const showProfileMenu = () => {
-
+  const logout = () => {
+    localStorage.removeItem("token");
+    location.reload();
   }
+
+
   
   return (
     <div className="flex gap-5 flex-col md:flex-row md:my-auto">
@@ -54,7 +57,6 @@ const MenuList = () => {
             <DropdownMenuTrigger className="my-auto hidden md:flex">
               <Button
                 variant={"outline"}
-                onClick={showProfileMenu}
                 className="rounded-full flex items-center justify-center h-8 w-8 my-auto"
               >
                 <User />
@@ -65,7 +67,7 @@ const MenuList = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}

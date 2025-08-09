@@ -1,7 +1,7 @@
-import { BillType } from "@/data/bills";
 import BillCard from "./bill-card";
+import { IBill } from "@/models/bill";
 
-const BillsMapper = ({ bills }: { bills: BillType[] }) => {
+const BillsMapper = ({ bills }: { bills: IBill[] }) => {
   return (
     <div className="flex flex-col gap-5 md:gap-10">
       {bills.map((item, i) => (
