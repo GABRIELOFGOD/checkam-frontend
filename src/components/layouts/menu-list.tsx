@@ -24,6 +24,8 @@ const MenuList = () => {
     {name: "Bills", href: "/bills"},
     {name: "Legislators", href: "/legislators"},
     {name: "Civic Education", href: "/civic-education"},
+    {name: "Feedback", href: "/feedback"},
+    {name: "About Us", href: "/about-us"}
   ]
 
   const path = usePathname();
@@ -41,7 +43,7 @@ const MenuList = () => {
   return (
     <div className="flex gap-5 flex-col md:flex-row md:my-auto">
       {listItems.map((item, index) => (
-        <Link key={index} href={item.href} className={cn("my-auto font-semibold", path === item.href ? "text-secondary" : "text-gray-700")}>
+        <Link key={index} href={item.href} className={cn("my-auto font-semibold text-sm", path === item.href ? "text-secondary" : "text-gray-700")}>
           {item.name}
         </Link>
       ))}
