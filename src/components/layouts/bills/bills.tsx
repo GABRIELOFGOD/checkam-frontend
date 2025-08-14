@@ -14,6 +14,8 @@ import { useUser } from "@/providers/user-provider";
 import { toast } from "sonner";
 import { ALLBILLS } from "@/utils/constants";
 import { IBill } from "@/models/bill";
+import { BillCategories } from "@/data/category";
+import { Search } from "lucide-react";
 
 const Bills = () => {
   const [bills, setBills] = useState<IBill[]>([]);
@@ -42,20 +44,42 @@ const Bills = () => {
         <div className="flex gap-3 flex-col">
           <PagesTop
             title='Bills'
-            short='Track the progress of bills in the Osun State House of Assembly'
+            short='Engage with all the bills currently in discussion and the laws at the Osun State House of Assembly. A bill is simply a proposed law and tracking bills helps you understand decisions that affect your life.'
             searchState={billSearch}
             searchChange={setBillSearch}
+            gotSearch={false}
           />
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="development">Development</SelectItem>
-              <SelectItem value="education">Educate</SelectItem>
-              <SelectItem value="health">Health</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col gap-3 md:flex-row">
+            <div
+              className="h-12 w-full flex-1 md:flex-[4] shadow-sm border-2 border-muted/20 rounded-md flex gap-3 px-3"
+            >
+              <Search size={20} className="my-auto text-muted/40" />
+              <input
+                type="search"
+                placeholder="Search"
+                className="h-full w-full border-none outline-none"
+                value={billSearch}
+                onChange={e => setBillSearch(e.target.value)}
+              />
+            </div>
+            <div className="w-full flex-1 h-12">
+              <Select>
+                <SelectTrigger className="w-full h-12">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {BillCategories.map((ctg) => (
+                    <SelectItem
+                      key={ctg.id}
+                      value="development"
+                    >
+                      {ctg.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
         {bills && <BillsMapper

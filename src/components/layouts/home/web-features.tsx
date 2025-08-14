@@ -5,27 +5,33 @@ const WebFeatures = () => {
   const features = [
     {
       label: "Bill Traker",
-      icon: File
+      icon: File,
+      className: "border-purple-500/30 shadow-sm shadow-purple-500/30"
     },
     {
       label: "Legislator Progress",
-      icon: User
+      icon: User,
+      className: "border-yellow-500/30 shadow-sm shadow-yellow-500/30"
     },
     {
       label: "Feedback Hub",
-      icon: Megaphone
+      icon: Megaphone,
+      className: "border-blue-500/30 shadow-sm shadow-blue-500/30"
     },
     {
       label: "Civic Education",
-      icon: BookOpenText
+      icon: BookOpenText,
+      className: "border-red-500/30 shadow-sm shadow-red-500/30"
     },
     {
       label: "Workspace",
-      icon: BriefcaseBusiness
+      icon: BriefcaseBusiness,
+      className: "border-green-500/30 shadow-sm shadow-green-500/30"
     },
     {
       label: "LeaderBoard",
-      icon: Trophy
+      icon: Trophy,
+      className: "border-teal-500/30 shadow-sm shadow-teal-500/30"
     },
   ]
   
@@ -36,6 +42,7 @@ const WebFeatures = () => {
           key={i}
           label={item.label}
           icon={item.icon}
+          className={item.className}
         />
       ))}
     </div>

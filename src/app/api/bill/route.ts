@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 })
   }
 
-  const user = await User.findOne({ email: decoded.email })
+  const user = await User.findOne({ email: decoded.email });
   if (!user || user.role !== "admin") {
     return NextResponse.json({ error: "Access denied" }, { status: 403 })
   }

@@ -1,16 +1,25 @@
+import { BillCategories } from "@/data/category";
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export enum Category {
-  DEVELOPMENT = "development",
-  HEALTH = "health",
-  EDUCATION = "education",
+export enum BillStage {
+  PROPOSED = "proposed",
+  PASSED = "passed",
+  REJECTED = "rejeected"
 }
 
-export enum BillStage {
-  FIRST_READING = "first-reading",
-  SECOND_READING = "second-reading",
-  PASSED = "passed",
-}
+// export const BillCategories = [
+//   { id: 1, name: "Infrastructure & Urban Development" },
+//   { id: 2, name: "Health & Public Safety" },
+//   { id: 3, name: "Education & Skills Development" },
+//   { id: 4, name: "Youth & Sports" },
+//   { id: 5, name: "Climate Change, Environment & Agriculture" },
+//   { id: 6, name: "Social Welfare & Inclusion" },
+//   { id: 7, name: "Economy, Trade & Investment" },
+//   { id: 8, name: "Governance, Law & Justice" },
+//   { id: 9, name: "Energy & Utilities" }
+// ];
+
+export type Category = typeof BillCategories[number]["name"];
 
 export interface IBill extends Document {
   image?: string;
@@ -29,7 +38,7 @@ const BillSchema: Schema<IBill> = new Schema(
     file: { type: String, required: true },
     category: {
       type: String,
-      enum: Object.values(Category),
+      enum: BillCategories.map(c => c.name),
       required: true,
     },
     stage: {

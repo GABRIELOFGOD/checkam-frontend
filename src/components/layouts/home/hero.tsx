@@ -24,16 +24,25 @@ const Hero = () => {
           />
         </div>
         <div className="flex-1">
-          <div className="h-fit md:h-[65vh] md:rounded-xl right-0 w-full justify-center md:w-[500px] flex flex-col gap-5 bg-primary text-white p-10 md:absolute relative animate-bounce/30 my-auto md:top-1/8 md:shadow-md">
-            <p className="text-secondary font-semibold">Engaging citizens in government in Osun State</p>
+          <div className="h-fit md:h-[65vh] md:rounded-xl right-0 w-full justify-center md:w-[600px] flex flex-col gap-5 bg-primary text-white p-10 md:absolute relative animate-bounce/30 my-auto md:top-1/8 md:shadow-md">
+            <p className="text-secondary font-semibold">Bridging the Youth–Government Gap with Legislative Transparency</p>
             <div className="flex flex-col gap-2">
               <p className="md:text-5xl text-3xl font-bold text-shadow-sm">Track Bills. Engage Legislature. Own Your Future.</p>
-              <p className=" text-gray-100">Stay informed and participate in legislative process. Checkam! empowers youths in Osun state to shape their future.</p>
+              <p className=" text-gray-100">We make it easy for young people to follow what is happening in the Legislative arm of the government, and speak up for change.</p>
             </div>
-            <Button
-              size={"lg"}
-              className="shadow-md bg-secondary w-fit hover:bg-secondary/80"
-            >Join Now!</Button>
+            <div className="flex gap-5">
+              <Button
+                size={"lg"}
+                className="shadow-md bg-secondary w-fit hover:bg-secondary/80"
+              >Track Bills</Button>
+              <Button
+                variant={"outline"}
+                className="text-black shadow-md"
+                size={"lg"}
+              >
+                Track Bills
+              </Button>
+            </div>
           </div>
         </div>
       </div>

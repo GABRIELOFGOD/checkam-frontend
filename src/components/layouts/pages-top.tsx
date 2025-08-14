@@ -5,12 +5,14 @@ const PagesTop = ({
   title,
   searchState,
   searchChange,
-  short
+  short,
+  gotSearch = true
 }: {
   title:  string,
   searchState: string,
   searchChange: Dispatch<SetStateAction<string>>,
-  short: string
+  short: string,
+  gotSearch?: boolean
 }) => {
   return (
     <div className="flex flex-col gap-5">
@@ -18,18 +20,20 @@ const PagesTop = ({
         <p className='text-2xl md:text-4xl font-extrabold'>{title}</p>
         <p className='text-muted text-sm'>{short}</p>
       </div>
-      <div
-        className="h-12 w-full shadow-sm border-2 border-muted/20 rounded-md flex gap-3 px-3"
-      >
-        <Search size={20} className="my-auto text-muted/40" />
-        <input
-          type="search"
-          placeholder="Search"
-          className="h-full w-full border-none outline-none"
-          value={searchState}
-          onChange={e => searchChange(e.target.value)}
-        />
-      </div>
+      {gotSearch && (
+        <div
+          className="h-12 w-full shadow-sm border-2 border-muted/20 rounded-md flex gap-3 px-3"
+        >
+          <Search size={20} className="my-auto text-muted/40" />
+          <input
+            type="search"
+            placeholder="Search"
+            className="h-full w-full border-none outline-none"
+            value={searchState}
+            onChange={e => searchChange(e.target.value)}
+          />
+        </div>
+      )}
     </div>
   )
 }

@@ -65,11 +65,11 @@ const data = {
       url: "/dashboard/feedbacks",
       icon: IconChartBar,
     },
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
-    },
+    // {
+    //   title: "Settings",
+    //   url: "/dashboard/settings",
+    //   icon: IconSettings,
+    // },
   ],
   navClouds: [
     {

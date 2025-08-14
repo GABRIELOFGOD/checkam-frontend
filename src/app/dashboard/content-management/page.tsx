@@ -25,8 +25,8 @@ const ContentManagement = () => {
           title="Bills"
           content={<BillContents />}
           button={{
-            text: "View more",
-            onButtonClick: () => {router.push("/dashboard/users")}
+            text: "Create bill",
+            onButtonClick: () => {router.push("/dashboard/bill/create")}
           }}
         />
         <ContentCard
