@@ -82,7 +82,7 @@ export function UserTable() {
       accessorKey: 'role',
       header: 'Role',
       cell: ({ row }) => (
-        <Badge variant={row.original.role === 'admin' ? 'default' : 'outline'}>
+        <Badge className='capitalize' variant={row.original.role === 'admin' ? 'default' : row.original.role === "legislator" ? "secondary" : 'outline'}>
           {row.original.role || 'user'}
         </Badge>
       ),
@@ -92,6 +92,22 @@ export function UserTable() {
       header: 'Joined',
       cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => (
+        <Button
+          // variant="outline"
+          size="sm"
+          onClick={() => {
+            // Replace with your navigation logic
+            window.location.href = `/dashboard/users/${row.original._id}`;
+          }}
+        >
+          View Profile
+        </Button>
+      ),
+    }
   ]
 
   const table = useReactTable<IUser>({

@@ -16,10 +16,12 @@ import { ALLBILLS } from "@/utils/constants";
 import { IBill } from "@/models/bill";
 import { BillCategories } from "@/data/category";
 import { Search } from "lucide-react";
+import Loading from "@/components/general-loader";
 
 const Bills = () => {
   const [bills, setBills] = useState<IBill[]>([]);
   const [billSearch, setBillSearch] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user } = useUser();
 
   const fetchAllBills = async () => {
@@ -31,12 +33,22 @@ const Bills = () => {
     } catch (error) {
       toast.error("Error fetching all bills, check your internet and reload");
       console.log("ERROR FETCHING BILLS", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     fetchAllBills();
   }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="h-screen top-0 left-0 w-full justify-center items-center flex z-50">
+        <Loading />;
+      </div>
+    )
+  }
   
   return (
     <div>

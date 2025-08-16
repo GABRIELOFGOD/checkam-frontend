@@ -1,5 +1,6 @@
 import { BillCategories } from "@/data/category";
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { IUser } from "./user";
 
 export enum BillStage {
   PROPOSED = "proposed",
@@ -28,6 +29,7 @@ export interface IBill extends Document {
   file: string;
   category: Category;
   stage: BillStage;
+  sponsored: IUser;
 }
 
 const BillSchema: Schema<IBill> = new Schema(
@@ -45,6 +47,19 @@ const BillSchema: Schema<IBill> = new Schema(
       type: String,
       enum: Object.values(BillStage),
       required: true,
+    },
+    sponsored: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      validate: {
+        validator: async function (userId: mongoose.Types.ObjectId) {
+          const User = mongoose.model("User");
+          const user = await User.findById(userId);
+          return user && user.role === "legislator";
+        },
+        message: "Only legislator can Sponsor a Bill",
+      },
     },
   },
   { timestamps: true }
