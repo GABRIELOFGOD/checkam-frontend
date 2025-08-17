@@ -3,15 +3,40 @@
 import React, { useEffect, useState } from 'react'
 import PagesTop from '../pages-top';
 import LegislatorMapper from './legislator-mapper';
-import { legislators, LegislatorType } from '@/data/legislator';
+import { toast } from 'sonner';
+import Loading from '@/components/general-loader';
+import { IUser } from '@/models/user';
 
 const LegislatureMain = () => {
   const [legislatureSearch, setLegislatureSearch] = useState<string>("");
-  const [allLegislatures, setAllLegislatures] = useState<LegislatorType[]>([]);
+  const [allLegislatures, setAllLegislatures] = useState<IUser[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const fetchLegislators = async () => {
+    try {
+      const res = await fetch('/api/users');
+      if (!res.ok) throw new Error('Failed to fetch legislators');
+      const data = await res.json();
+      setAllLegislatures(data.filter((user: IUser) => user.role === 'legislator'));
+    } catch (error) {
+      toast.error("Error getting legislators data, Please reload");
+      console.log(error)
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    setAllLegislatures(legislators);
+    fetchLegislators();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className='h-screen w-full flex justify-center items-center left-0 top-0'>
+        <Loading />
+      </div>
+    )
+  }
   
   return (
     <div className="flex flex-col gap-5">

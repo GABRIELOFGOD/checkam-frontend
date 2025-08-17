@@ -12,6 +12,7 @@ import { IUser } from "@/models/user";
 import { toast } from "sonner";
 import { Loader2, X } from "lucide-react";
 import Image from "next/image";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AdminUserProfile() {
   const params = useParams();
@@ -19,10 +20,10 @@ export default function AdminUserProfile() {
 
   const [user, setUser] = useState<IUser | null>(null);
   const [formData, setFormData] = useState<Partial<IUser>>({});
-  const [imageFile, setImageFile] = useState<File | null>(null); // new
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isChanged, setIsChanged] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false); // new
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -46,8 +47,16 @@ export default function AdminUserProfile() {
     if (userId) fetchUser();
   }, [userId]);
 
-  function handleChange(field: keyof IUser, value: string | number | undefined) {
+  function handleChange(field: keyof IUser, value: string | undefined) {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setIsChanged(true);
+  }
+
+  function handleSocialChange(field: keyof NonNullable<IUser["socials"]>, value: string) {
+    setFormData((prev) => ({
+      ...prev,
+      socials: { ...prev.socials, [field]: value },
+    }));
     setIsChanged(true);
   }
 
@@ -56,7 +65,7 @@ export default function AdminUserProfile() {
     if (file) {
       const fileUrl = URL.createObjectURL(file);
       setPreviewImage(fileUrl);
-      setImageFile(file); // store File separately
+      setImageFile(file);
     }
   }
 
@@ -66,6 +75,11 @@ export default function AdminUserProfile() {
   }
 
   async function handleSave() {
+    if (formData.role === "legislator" && (!formData.constituency || !formData.party)) {
+      toast.error("Legislators must provide Constituency and Party ❌");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch(`/api/users?id=${userId}`, {
@@ -172,6 +186,36 @@ export default function AdminUserProfile() {
                 <SelectItem value="legislator">Legislator</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Legislator-specific fields */}
+          {formData.role === "legislator" && (
+            <>
+              <div>
+                <Label>Constituency</Label>
+                <Input value={formData.constituency || ""} onChange={(e) => handleChange("constituency", e.target.value)} />
+              </div>
+
+              <div>
+                <Label>Party</Label>
+                <Input value={formData.party || ""} onChange={(e) => handleChange("party", e.target.value)} />
+              </div>
+            </>
+          )}
+
+          {/* Bio */}
+          <div>
+            <Label>Bio</Label>
+            <Textarea value={formData.bio || ""} onChange={(e) => handleChange("bio", e.target.value)} />
+          </div>
+
+          {/* Socials */}
+          <div className="grid gap-3">
+            <Label>Socials</Label>
+            <Input placeholder="Facebook" value={formData.socials?.facebook || ""} onChange={(e) => handleSocialChange("facebook", e.target.value)} />
+            <Input placeholder="LinkedIn" value={formData.socials?.linkedIn || ""} onChange={(e) => handleSocialChange("linkedIn", e.target.value)} />
+            <Input placeholder="X (Twitter)" value={formData.socials?.x || ""} onChange={(e) => handleSocialChange("x", e.target.value)} />
+            <Input placeholder="Mail" value={formData.socials?.mail || ""} onChange={(e) => handleSocialChange("mail", e.target.value)} />
           </div>
 
           {/* Profile Image */}

@@ -10,7 +10,7 @@ export default function LegislatorPageClient({ params }: { params: Promise<{ nam
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">Legislator Profile</h1>
-      <LegislatorProfileComp name={name} />
+      <LegislatorProfileComp id={name} />
     </main>
   )
 }

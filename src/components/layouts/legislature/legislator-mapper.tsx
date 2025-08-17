@@ -1,9 +1,8 @@
-import { LegislatorType } from "@/data/legislator";
 import LegislatorCard from "./legislator-card";
 import Link from "next/link";
-import { slugify } from "@/lib/helper";
+import { IUser } from "@/models/user";
 
-const LegislatorMapper = ({ legislators }: { legislators: LegislatorType[] }) => {
+const LegislatorMapper = ({ legislators }: { legislators: IUser[] }) => {
   if (!legislators.length) {
     return (
       <div className="w-full h-[200px] flex flex-col items-center justify-center">
@@ -17,7 +16,7 @@ const LegislatorMapper = ({ legislators }: { legislators: LegislatorType[] }) =>
       {legislators.map((item, i) => (
         <Link
           key={i}
-          href={`/legislators/${slugify(item.name)}`}
+          href={`/legislators/${item._id}`}
         >
           <LegislatorCard
             legislator={item}

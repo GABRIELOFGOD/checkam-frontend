@@ -1,19 +1,23 @@
 "use client";
 
+import Loading from "@/components/general-loader";
 import { Button } from "@/components/ui/button";
-import { legislators, LegislatorType } from "@/data/legislator";
-import { unslugify } from "@/lib/helper";
 import { cn } from "@/lib/utils";
+import { IUser } from "@/models/user";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoIosMail, IoLogoFacebook, IoLogoLinkedin } from "react-icons/io";
+import { toast } from "sonner";
 
-const LegislatorProfileComp = ({ name }: { name: string }) => {
-  const [legislator, setLegislator] = useState<LegislatorType | null>(null);
+const LegislatorProfileComp = ({ id }: { id: string }) => {
+  const [legislator, setLegislator] = useState<IUser | null>(null);
   const [viewBio, setViewBio] = useState<boolean>(false);
   const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const router = useRouter();
   
   /**
    * Attempts to find the best matching legislator based on the provided `name` slug.
@@ -32,15 +36,23 @@ const LegislatorProfileComp = ({ name }: { name: string }) => {
    * This approach allows for flexible and partial matching, accommodating cases where
    * the search input may be incomplete or formatted differently.
    */
-  const getLegislator = () => {
-    const searchName = unslugify(name).replace(/^Hon\s+/i, '').toLowerCase();
-    const leg = legislators.find(legis => 
-      legis.name.replace(/^Hon\.?\s+/i, '').toLowerCase() === searchName
-    );
-    if (leg) {
-      setLegislator(leg);
-    } else {
-      setLegislator(null);
+  const getLegislator = async () => {
+    try {
+      const req = await fetch(`/api/users?id=${id}`);
+      const data = await req.json();
+      if (req.ok) {
+        if (data.role !== "legislator") {
+          toast.warning("The ID you provided does not belong to a legislator.");
+          router.push("/legislators");
+        };
+        setLegislator(data);
+      } else {
+        console.error("Failed to fetch legislator:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching legislator:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -50,6 +62,14 @@ const LegislatorProfileComp = ({ name }: { name: string }) => {
     getLegislator();
     setProjects([]);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className='h-screen w-full flex justify-center items-center left-0 top-0'>
+        <Loading />
+      </div>
+    )
+  }
   
   return (
     <div>
@@ -58,14 +78,14 @@ const LegislatorProfileComp = ({ name }: { name: string }) => {
             <div className="flex flex-col md:flex-row gap-5 bg-gray-100 rounded-md p-4 w-full">
             <Image
               src={legislator.image || ""}
-              alt={legislator.name}
+              alt={legislator.fname}
               width={300}
               height={300}
               className="w-full md:w-[300px] h-auto object-cover rounded"
             />
             <div className="flex my-auto flex-col">
-              <h2 className="flex text-2xl font-extrabold">{legislator.name}</h2>
-              <p className="text-card-foreground/80 font-semibold">{legislator.office} <span className="italic text-secondary">({legislator.constituency})</span></p>
+              <h2 className="flex text-2xl font-extrabold">{legislator.fname} {legislator.lname}</h2>
+              <p className="text-card-foreground/80 font-semibold">{legislator.party} <span className="italic text-secondary">({legislator.constituency})</span></p>
               {legislator.socials && (<div className="mt-2 w-full flex justify-start gap-2 text-gray-400">
               {legislator.socials.facebook && (<Link className="my-auto" href={legislator.socials.facebook}>
                 <IoLogoFacebook size={30} />
