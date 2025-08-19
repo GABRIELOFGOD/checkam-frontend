@@ -2,8 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
+import { useDropzone } from "react-dropzone";
+import { IUser } from "@/models/user";
+import { Loader2 } from "lucide-react";
+// If you want inline PDF preview (not just filename):
+// npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout
+// import { Worker, Viewer } from "@react-pdf-viewer/core";
 
 const categories = ["development", "health", "education"];
 const stages = ["first-reading", "second-reading", "passed"];
@@ -16,38 +22,74 @@ const CreateBill = () => {
     stage: "",
     file: null as File | null,
     image: null as File | null,
+    sponsored: "",
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sponsors, setSponsors] = useState<IUser[]>([]);
+  const [loadingSponsors, setLoadingSponsors] = useState(true);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    setFormData((prev) => ({ ...prev, file }));
-    setFileName(file?.name || null);
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    setFormData((prev) => ({ ...prev, image: file }));
-
+  // PDF/DOC drop handler
+  const onDropFile = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
     if (file) {
+      setFormData((prev) => ({ ...prev, file }));
+      setFilePreview(file.name); // just showing name
+    }
+  }, []);
+
+  const { getRootProps: getFileRoot, getInputProps: getFileInput } = useDropzone({
+    onDrop: onDropFile,
+    multiple: false,
+    accept: {
+      "application/pdf": [".pdf"],
+      "application/msword": [".doc"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+    },
+  });
+
+  // Image drop handler
+  const onDropImage = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file }));
       const reader = new FileReader();
       reader.onload = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
-    } else {
-      setImagePreview(null);
     }
-  };
+  }, []);
+
+  const { getRootProps: getImageRoot, getInputProps: getImageInput } = useDropzone({
+    onDrop: onDropImage,
+    multiple: false,
+    accept: { "image/*": [] },
+  });
+
+  const getSponsors = async () => {
+    try {
+      const res = await fetch("/api/users", {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch sponsors");
+      const data = await res.json();
+      const gotten = data.filter((user: IUser) => user.role === "legislator");
+      setSponsors(gotten);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load sponsors");
+    } finally {
+      setLoadingSponsors(false);
+    }
+  }
+
+  useEffect(() => {
+    getSponsors();
+  }, []);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -64,6 +106,7 @@ const CreateBill = () => {
 
     if (!formData.category) newErrors.category = "Category is required";
     if (!formData.stage) newErrors.stage = "Stage is required";
+    if (!formData.sponsored) newErrors.sponsored = "Sponsor is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,8 +131,8 @@ const CreateBill = () => {
         method: "POST",
         body: payload,
         headers: {
-          "authorization": `Bearer ${localStorage.getItem("token")}`
-        }
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (!res.ok) throw new Error("Failed to submit");
@@ -102,11 +145,12 @@ const CreateBill = () => {
         stage: "",
         file: null,
         image: null,
+        sponsored: "",
       });
-      setFileName(null);
+      setFilePreview(null);
       setImagePreview(null);
       setErrors({});
-      location.assign("/dashboard/bills")
+      location.assign("/dashboard/bills");
     } catch (err) {
       console.error("Submission error", err);
     } finally {
@@ -128,7 +172,7 @@ const CreateBill = () => {
             className="w-full border rounded px-3 py-2"
             placeholder="Enter bill title"
             value={formData.title}
-            onChange={handleChange}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           />
           {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
         </div>
@@ -140,7 +184,7 @@ const CreateBill = () => {
             name="category"
             className="w-full border rounded px-3 py-2"
             value={formData.category}
-            onChange={handleChange}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
             <option value="">Select category</option>
             {categories.map((cat) => (
@@ -152,6 +196,31 @@ const CreateBill = () => {
           {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
         </div>
 
+        {/* Sponsor */}
+        <div>
+          <label className="block font-medium mb-1">Bill Sponsor</label>
+            <select
+              name="sponsor"
+              className="w-full border rounded px-3 py-2"
+              value={formData.sponsored}
+              onChange={(e) => setFormData({ ...formData, sponsored: e.target.value })}
+            >
+              <option value="">Select sponsor</option>
+              {loadingSponsors ? (
+                <div className="text-gray-500 py-2 flex w-full justify-center items-center">
+                  <Loader2 size={20} className="text-gray-500 animate-spin" />
+                </div>
+              ) : sponsors.length < 1 ? (
+                <option className="text-gray-500 py-2 w-full text-center italic font-bold text-sm">No sponsors available, please add legislator to add a sponsor.</option>
+              ) : sponsors.map((sponsor) => (
+                <option key={sponsor._id as string} value={sponsor._id as string}>
+                  {sponsor.fname} {sponsor.lname}
+                </option>
+              ))}
+            </select>
+          {errors.sponsored && <p className="text-red-500 text-sm mt-1">{errors.sponsored}</p>}
+        </div>
+
         {/* Stage */}
         <div>
           <label className="block font-medium mb-1">Stage</label>
@@ -159,7 +228,7 @@ const CreateBill = () => {
             name="stage"
             className="w-full border rounded px-3 py-2"
             value={formData.stage}
-            onChange={handleChange}
+            onChange={(e) => setFormData({ ...formData, stage: e.target.value })}
           >
             <option value="">Select stage</option>
             {stages.map((s) => (
@@ -171,35 +240,39 @@ const CreateBill = () => {
           {errors.stage && <p className="text-red-500 text-sm mt-1">{errors.stage}</p>}
         </div>
 
-        {/* File */}
+        {/* File (PDF/DOC) */}
         <div>
           <label className="block font-medium mb-1">Bill File (PDF or Document)</label>
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileChange}
-            className="w-full"
-          />
-          {fileName && <p className="text-sm text-gray-600 mt-1">Selected file: {fileName}</p>}
+          <div
+            {...getFileRoot()}
+            className="border-dashed border-2 rounded px-4 py-12 text-center cursor-pointer hover:bg-gray-50"
+          >
+            <input {...getFileInput()} />
+            <p>Drag & drop PDF/DOC here, or click to select</p>
+          </div>
+          {filePreview && <p className="mt-2 text-sm text-gray-700">Selected: {filePreview}</p>}
           {errors.file && <p className="text-red-500 text-sm mt-1">{errors.file}</p>}
         </div>
 
         {/* Image */}
         <div>
           <label className="block font-medium mb-1">Optional Cover Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full"
-          />
+          <div
+            {...getImageRoot()}
+            className="border-dashed border-2 rounded px-4 py-12 text-center cursor-pointer hover:bg-gray-50"
+          >
+            <input {...getImageInput()} />
+            <p>Drag & drop an image here, or click to select</p>
+          </div>
           {imagePreview && (
-            <Image
-              src={imagePreview}
-              alt="Preview"
-              fill
-              className="mt-2 max-h-40 rounded border object-contain"
-            />
+            <div className="relative w-full h-40 mt-2">
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                fill
+                className="rounded border object-contain"
+              />
+            </div>
           )}
           {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
         </div>
@@ -213,17 +286,14 @@ const CreateBill = () => {
             className="w-full border rounded px-3 py-2"
             placeholder="Write a brief summary of the bill..."
             value={formData.summary}
-            onChange={handleChange}
+            onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
           />
           {errors.summary && <p className="text-red-500 text-sm mt-1">{errors.summary}</p>}
         </div>
 
         {/* Submit */}
         <div className="md:col-span-2">
-          <Button
-            type="submit"
-            disabled={submitting}
-          >
+          <Button type="submit" disabled={submitting}>
             {submitting ? "Submitting..." : "Create Bill"}
           </Button>
         </div>

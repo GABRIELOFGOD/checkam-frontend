@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,15 +27,17 @@ export default function AdminUserProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  const router = useRouter();
+
   useEffect(() => {
     async function fetchUser() {
       try {
         const res = await fetch(`/api/users?id=${userId}`);
         if (!res.ok) throw new Error("Failed to fetch user");
         const data = await res.json();
-        setUser(data);
-        setFormData(data);
-        setPreviewImage(data.image || null);
+        setUser(data.user);
+        setFormData(data.user);
+        setPreviewImage(data.user.image || null);
       } catch (error) {
         console.error("Error fetching user:", error);
         toast.error("Failed to load user data");
@@ -75,9 +77,23 @@ export default function AdminUserProfile() {
   }
 
   async function handleSave() {
+    // Validate legislator fields
     if (formData.role === "legislator" && (!formData.constituency || !formData.party)) {
       toast.error("Legislators must provide Constituency and Party ❌");
       return;
+    }
+
+    // Validate social links
+    const socials = formData.socials;
+    if (socials) {
+      const linkFields: (keyof typeof socials)[] = ["facebook", "linkedIn", "x"];
+      for (const field of linkFields) {
+        const value = socials[field];
+        if (value && !/^https?:\/\/.+/.test(value)) {
+          toast.error(`Please enter a valid link for ${field} ❌`);
+          return;
+        }
+      }
     }
 
     setLoading(true);
@@ -91,6 +107,7 @@ export default function AdminUserProfile() {
       if (res.ok) {
         toast.success("Profile updated successfully ✅");
         setIsChanged(false);
+        router.refresh();
       } else {
         toast.error("Failed to update profile ❌");
       }
@@ -120,6 +137,7 @@ export default function AdminUserProfile() {
         setFormData((prev) => ({ ...prev, image: updatedUser.image }));
         setImageFile(null);
         toast.success("Profile image updated ✅");
+        router.refresh();
       } else {
         toast.error("Failed to upload image ❌");
       }
@@ -210,13 +228,35 @@ export default function AdminUserProfile() {
           </div>
 
           {/* Socials */}
-          <div className="grid gap-3">
+            <div className="grid gap-3">
             <Label>Socials</Label>
-            <Input placeholder="Facebook" value={formData.socials?.facebook || ""} onChange={(e) => handleSocialChange("facebook", e.target.value)} />
-            <Input placeholder="LinkedIn" value={formData.socials?.linkedIn || ""} onChange={(e) => handleSocialChange("linkedIn", e.target.value)} />
-            <Input placeholder="X (Twitter)" value={formData.socials?.x || ""} onChange={(e) => handleSocialChange("x", e.target.value)} />
-            <Input placeholder="Mail" value={formData.socials?.mail || ""} onChange={(e) => handleSocialChange("mail", e.target.value)} />
-          </div>
+            <Input
+              placeholder="Facebook profile link"
+              value={formData.socials?.facebook || ""}
+              onChange={(e) => handleSocialChange("facebook", e.target.value)}
+              type="url"
+              pattern="https?://.+"
+            />
+            <Input
+              placeholder="LinkedIn profile link"
+              value={formData.socials?.linkedIn || ""}
+              onChange={(e) => handleSocialChange("linkedIn", e.target.value)}
+              type="url"
+              pattern="https?://.+"
+            />
+            <Input
+              placeholder="X (Twitter) profile link"
+              value={formData.socials?.x || ""}
+              onChange={(e) => handleSocialChange("x", e.target.value)}
+              type="url"
+              pattern="https?://.+"
+            />
+            <Input
+              placeholder="Mail"
+              value={formData.socials?.mail || ""}
+              onChange={(e) => handleSocialChange("mail", e.target.value)}
+            />
+            </div>
 
           {/* Profile Image */}
           <div>

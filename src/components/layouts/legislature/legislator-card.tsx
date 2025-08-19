@@ -8,13 +8,13 @@ import { IUser } from "@/models/user";
 const LegislatorCard = ({ legislator }: { legislator: IUser }) => {
   return (
     <div>
-      <div className="rounded-md border-2 border-border/80 w-full overflow-hidden h-fit">
+      <div className="rounded-md border-2 border-border/80 w-full overflow-hidden h-fit shadow-md">
         <div className="md:h-[256px] h-[250px] w-full bg-accent/40 relative">
           <Image
             src={legislator?.image || "/brand/checkam_logo.png"}
             alt={`${legislator.fname} image`}
             fill
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover object-top hover:scale-110 transition-all duration-300 ease-in-out"
           />
         </div>
 

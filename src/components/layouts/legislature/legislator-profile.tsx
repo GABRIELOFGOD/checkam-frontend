@@ -3,6 +3,7 @@
 import Loading from "@/components/general-loader";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { IBill } from "@/models/bill";
 import { IUser } from "@/models/user";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,11 +12,12 @@ import { useEffect, useState } from "react";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoIosMail, IoLogoFacebook, IoLogoLinkedin } from "react-icons/io";
 import { toast } from "sonner";
+import BillCard from "../bills/bill-card";
 
 const LegislatorProfileComp = ({ id }: { id: string }) => {
   const [legislator, setLegislator] = useState<IUser | null>(null);
   const [viewBio, setViewBio] = useState<boolean>(false);
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<IBill[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   
@@ -38,14 +40,17 @@ const LegislatorProfileComp = ({ id }: { id: string }) => {
    */
   const getLegislator = async () => {
     try {
-      const req = await fetch(`/api/users?id=${id}`);
+      const req = await fetch(`/api/users?id=${id}&with=projects`);
       const data = await req.json();
       if (req.ok) {
-        if (data.role !== "legislator") {
+        if (data.user.role !== "legislator") {
           toast.warning("The ID you provided does not belong to a legislator.");
           router.push("/legislators");
         };
-        setLegislator(data);
+        setLegislator(data.user);
+        if (data.projects) {
+          setProjects(data.projects);
+        }
       } else {
         console.error("Failed to fetch legislator:", data);
       }
@@ -119,7 +124,10 @@ const LegislatorProfileComp = ({ id }: { id: string }) => {
             {projects.length > 0 ? (
               <ul className="list-disc pl-5">
                 {projects.map((project, index) => (
-                  <li key={index} className="text-gray-700">{project}</li>
+                  <BillCard
+                    key={index}
+                    bill={project}
+                  />
                 ))}
               </ul>
             ) : (

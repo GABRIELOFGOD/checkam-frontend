@@ -59,10 +59,16 @@ export async function POST(request: NextRequest) {
     const stage = formData.get("stage") as string
     const file = formData.get("file") as File
     const image = formData.get("image") as File | null
+    const sponsorId = formData.get("sponsored") as string
 
     if (!file) {
       return NextResponse.json({ message: "Upload bill file to continue" }, { status: 400 })
-    }
+    };
+
+    const sponsored = await User.findById(sponsorId);
+    if (!sponsored || sponsored.role !== "legislator") {
+      return NextResponse.json({ message: "Invalid sponsor" }, { status: 400 })
+    };
 
     // Upload file
     const fileBuffer = Buffer.from(await file.arrayBuffer())
@@ -73,7 +79,7 @@ export async function POST(request: NextRequest) {
           else resolve(result)
         })
         .end(fileBuffer)
-    })
+    });
 
     // Upload optional image
     let imageUrl = ""
@@ -97,6 +103,7 @@ export async function POST(request: NextRequest) {
       stage,
       file: uploadedFile.secure_url,
       image: imageUrl,
+      sponsored
     })
 
     return NextResponse.json(newBill, { status: 201 })

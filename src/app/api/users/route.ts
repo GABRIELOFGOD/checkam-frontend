@@ -1,6 +1,7 @@
 // app/api/users/route.ts
 import cloudinary from "@/config/cloudinary"
 import { connectToDatabase } from '@/config/database';
+import { Bill, IBill } from "@/models/bill";
 import { User } from '@/models/user';
 import { UploadApiResponse } from 'cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
@@ -9,7 +10,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
+  const withProjects = searchParams.get('with') === 'projects';
   await connectToDatabase();
+  let projects: IBill[] = [];
 
   if (id) {
     // Find one by id
@@ -17,7 +20,10 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
-    return NextResponse.json(user);
+    if (withProjects) {
+      projects = await Bill.find({ sponsored: id });
+    }
+    return NextResponse.json({ user, projects });
   } else {
     // Find all
     const users = await User.find();

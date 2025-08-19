@@ -12,7 +12,7 @@ const LegislatorMapper = ({ legislators }: { legislators: IUser[] }) => {
   }
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
       {legislators.map((item, i) => (
         <Link
           key={i}
