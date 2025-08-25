@@ -16,7 +16,7 @@ const Infographics = () => {
   
   return (
     <div className='flex flex-col gap-5 w-full'>
-      <p className='text-[22px] font-bold'>Infographics</p>
+      <p className='text-[22px] font-bold'>Infographics & videos</p>
       <div className="w-full gap-5">
         {!infographs.length ?
         (<div className="w-full h-[200px] flex flex-col items-center justify-center">

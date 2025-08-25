@@ -38,11 +38,11 @@ const ContentManagement = () => {
           }}
         />
         <ContentCard
-          title="Videos"
+          title="Articles"
           content={<p>No content yet!</p>}
           button={{
             text: "View more",
-            onButtonClick: () => {router.push("/dashboard/users")}
+            onButtonClick: () => {router.push("/dashboard/articles")}
           }}
         />
       </div>

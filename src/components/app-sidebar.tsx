@@ -32,6 +32,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { FileChartPie } from "lucide-react"
 
 const data = {
   user: {
@@ -59,6 +60,11 @@ const data = {
       title: "Bills",
       url: "/dashboard/bills",
       icon: IconFileInvoice,
+    },
+    {
+      title: "Articles",
+      url: "/dashboard/articles",
+      icon: FileChartPie,
     },
     {
       title: "Feedbacks",

@@ -7,12 +7,10 @@ import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
 import { IUser } from "@/models/user";
 import { Loader2 } from "lucide-react";
+import { BillCategories, billStages } from "@/data/category";
 // If you want inline PDF preview (not just filename):
 // npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout
 // import { Worker, Viewer } from "@react-pdf-viewer/core";
-
-const categories = ["development", "health", "education"];
-const stages = ["first-reading", "second-reading", "passed"];
 
 const CreateBill = () => {
   const [formData, setFormData] = useState({
@@ -187,9 +185,9 @@ const CreateBill = () => {
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
             <option value="">Select category</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            {BillCategories.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
               </option>
             ))}
           </select>
@@ -231,9 +229,9 @@ const CreateBill = () => {
             onChange={(e) => setFormData({ ...formData, stage: e.target.value })}
           >
             <option value="">Select stage</option>
-            {stages.map((s) => (
-              <option key={s} value={s}>
-                {s.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+            {billStages.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
               </option>
             ))}
           </select>

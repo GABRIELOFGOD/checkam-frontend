@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(newBill, { status: 201 })
   } catch (error) {
     console.error("Upload error:", error)
-    return NextResponse.json({ message: "Error creating bill" }, { status: 500 })
+    return NextResponse.json({ message: "Error creating bill", error }, { status: 500 })
   }
 }
 

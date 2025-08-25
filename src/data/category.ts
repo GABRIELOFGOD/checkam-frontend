@@ -36,3 +36,9 @@ export const BillCategories = [
     name: "Energy & Utilities"
   }
 ]
+
+export const billStages = [
+  { id: 1, name: "proposed" },
+  { id: 2, name: "passed" },
+  { id: 3, name: "rejected" }
+]

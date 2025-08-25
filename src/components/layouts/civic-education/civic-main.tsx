@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PagesTop from "../pages-top";
 import Infographics from "./infographics";
-import Video from "./video";
+import InfographArticles from "./infograph-articles";
 
 const CivicMain = () => {
   const [civicSearch, setCivicSearch] = useState<string>("");
@@ -12,13 +12,14 @@ const CivicMain = () => {
     <div className="flex flex-col gap-5 w-full">
       <PagesTop
         title='Civic Education Portal'
-        short='Explore resources to understand your rights, responsibilities, and how to engage with the Osun State government.'
+        short='Learn how the government works and how you can take part in it. When you know your rights and responsibilities, you can make better decisions and hold your leaders accountable.'
         searchState={civicSearch}
         searchChange={setCivicSearch  }
       />
 
+      <InfographArticles />
       <Infographics />
-      <Video />
+      {/* <Video /> */}
     </div>
   )
 }
