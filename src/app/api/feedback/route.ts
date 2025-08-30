@@ -36,46 +36,22 @@ async function authenticateAdmin(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await connectToDatabase();
 
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { error: "Authorization token missing or invalid" },
-      { status: 401 }
-    );
-  }
-
-  const token = authHeader.split(" ")[1];
-  let decoded: JwtPayload;
-  try {
-    decoded = verify(token, process.env.JWT_SECRET!) as JwtPayload;
-  } catch {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
-
-  const user = await User.findOne({ email: decoded.email });
-  if (!user) {
-    return NextResponse.json(
-      { error: "Please login to send feedback" },
-      { status: 403 }
-    );
-  }
-
   try {
     const body = await req.json();
-    const { about, urgency, feedback } = body;
+    const { name, email, topic, message } = body;
 
-    if (!about || !urgency || !feedback) {
+    if (!topic || !message) {
       return NextResponse.json(
-        { error: "All fields are required" },
+        { error: "Topic and message are required" },
         { status: 400 }
       );
     }
 
     const newFeedback = await Feedback.create({
-      about,
-      urgency,
-      feedback,
-      user: user._id,
+      name,
+      email,
+      topic,
+      message,
     });
 
     return NextResponse.json(
@@ -98,7 +74,6 @@ export async function GET(req: NextRequest) {
   }
 
   const feedbacks = await Feedback.find()
-    .populate("user", "name email")
     .sort({ createdAt: -1 });
 
   return NextResponse.json(feedbacks, { status: 200 });

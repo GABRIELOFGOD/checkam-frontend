@@ -9,22 +9,20 @@ import Loading from "@/components/general-loader";
 
 interface FeedbackType {
   _id: string;
-  about: string;
-  urgency: string;
-  feedback: string;
+  name?: string;
+  email?: string;
+  topic: "suggestion" | "complaint" | "question";
+  message: string;
   status?: string;
   createdAt: string;
-  user?: {
-    name?: string;
-    email?: string;
-  };
 }
 
 const AdminFeedBack = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   const fetchFeedbacks = async () => {
     setLoading(true);
@@ -33,9 +31,8 @@ const AdminFeedBack = () => {
         headers: { authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      console.log("Feedback data", data);
       if (!res.ok) throw new Error(data.error || "Failed to fetch feedback");
-      setFeedbacks(data.data);
+      setFeedbacks(data);
     } catch (error: unknown) {
       if (isError(error)) {
         toast.error(error.message);
@@ -107,9 +104,8 @@ const AdminFeedBack = () => {
           <table className="w-full text-left border-collapse">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-3 border">About</th>
-                <th className="p-3 border">Urgency</th>
-                <th className="p-3 border">Feedback</th>
+                <th className="p-3 border">Topic</th>
+                <th className="p-3 border">Message</th>
                 <th className="p-3 border">User</th>
                 <th className="p-3 border">Date</th>
                 <th className="p-3 border">Status</th>
@@ -119,28 +115,24 @@ const AdminFeedBack = () => {
             <tbody>
               {feedbacks.map((item) => (
                 <tr key={item._id} className="border-b hover:bg-gray-50">
-                  <td className="p-3 border">{item.about}</td>
+                  {/* Topic */}
+                  <td className="p-3 border capitalize">{item.topic}</td>
+
+                  {/* Message */}
+                  <td className="p-3 border">{item.message}</td>
+
+                  {/* User */}
                   <td className="p-3 border">
-                    <Badge
-                      variant={
-                        item.urgency === "very-urgent"
-                          ? "destructive"
-                          : item.urgency === "urgent"
-                          ? "secondary"
-                          : "outline"
-                      }
-                    >
-                      {item.urgency}
-                    </Badge>
+                    {item.name || "Anonymous"} <br />
+                    <small className="text-gray-500">{item.email}</small>
                   </td>
-                  <td className="p-3 border">{item.feedback}</td>
-                  <td className="p-3 border">
-                    {item.user?.name || "Unknown"} <br />
-                    <small className="text-gray-500">{item.user?.email}</small>
-                  </td>
+
+                  {/* Date */}
                   <td className="p-3 border">
                     {new Date(item.createdAt).toLocaleString()}
                   </td>
+
+                  {/* Status */}
                   <td className="p-3 border">
                     <Badge
                       variant={item.status === "resolved" ? "secondary" : "outline"}
@@ -148,6 +140,8 @@ const AdminFeedBack = () => {
                       {item.status || "pending"}
                     </Badge>
                   </td>
+
+                  {/* Actions */}
                   <td className="p-3 border flex gap-2">
                     {item.status !== "resolved" && (
                       <Button

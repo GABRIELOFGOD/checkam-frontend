@@ -7,6 +7,7 @@ import {
   IconDashboard,
   IconDatabase,
   IconFileAi,
+  IconFileChart,
   IconFileDescription,
   IconFileInvoice,
   IconFileWord,
@@ -32,7 +33,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { FileChartPie } from "lucide-react"
 
 const data = {
   user: {
@@ -64,7 +64,7 @@ const data = {
     {
       title: "Articles",
       url: "/dashboard/articles",
-      icon: FileChartPie,
+      icon: IconFileChart,
     },
     {
       title: "Feedbacks",
