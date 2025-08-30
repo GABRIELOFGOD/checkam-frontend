@@ -19,12 +19,11 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, BillStage } from "@/models/bill";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, useMemo } from "react";
+import { BillCategories, billStages } from "@/data/category";
 
-// Zod schema
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   summary: z.string().min(10, "Summary must be at least 10 characters"),
@@ -40,10 +39,10 @@ const formSchema = z.object({
       (file) => !file?.length || file[0].type.startsWith("image/"),
       "Image must be a valid image file"
     ),
-  category: z.nativeEnum(Category, {
+  category: z.enum(BillCategories.map((c) => c.name) as [string, ...string[]], {
     errorMap: () => ({ message: "Category is required" }),
   }),
-  stage: z.nativeEnum(BillStage, {
+  stage: z.enum(billStages.map((s) => s.name) as [string, ...string[]], {
     errorMap: () => ({ message: "Stage is required" }),
   }),
 });
@@ -61,8 +60,8 @@ const CreateBill = () => {
       () => ({
         title: "",
         summary: "",
-        category: "" as unknown as Category,
-        stage: "" as unknown as BillStage,
+        category: undefined,
+        stage: undefined,
       }),
       []
     ),
@@ -130,14 +129,14 @@ const CreateBill = () => {
               <FormItem>
                 <FormLabel>Category</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(Category).map((cat) => (
-                        <SelectItem key={cat} value={cat}>
-                          {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      {BillCategories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.name}>
+                          {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -156,14 +155,14 @@ const CreateBill = () => {
               <FormItem>
                 <FormLabel>Stage</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select stage" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(BillStage).map((stage) => (
-                        <SelectItem key={stage} value={stage}>
-                          {stage.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                      {billStages.map((stage) => (
+                        <SelectItem key={stage.id} value={stage.name}>
+                          {stage.name.charAt(0).toUpperCase() + stage.name.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>

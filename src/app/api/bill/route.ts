@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       stage,
       file: uploadedFile.secure_url,
       image: imageUrl,
-      sponsored
+      sponsored: sponsored._id
     })
 
     return NextResponse.json(newBill, { status: 201 })

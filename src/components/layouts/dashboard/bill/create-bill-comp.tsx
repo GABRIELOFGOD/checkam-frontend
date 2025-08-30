@@ -8,9 +8,6 @@ import { useDropzone } from "react-dropzone";
 import { IUser } from "@/models/user";
 import { Loader2 } from "lucide-react";
 import { BillCategories, billStages } from "@/data/category";
-// If you want inline PDF preview (not just filename):
-// npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout
-// import { Worker, Viewer } from "@react-pdf-viewer/core";
 
 const CreateBill = () => {
   const [formData, setFormData] = useState({
@@ -123,6 +120,7 @@ const CreateBill = () => {
     if (formData.image) payload.append("image", formData.image);
     payload.append("category", formData.category);
     payload.append("stage", formData.stage);
+    payload.append("sponsored", formData.sponsored);
 
     try {
       const res = await fetch("/api/bill", {
@@ -230,8 +228,8 @@ const CreateBill = () => {
           >
             <option value="">Select stage</option>
             {billStages.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
+              <option key={s.id} value={s.name}>
+                {s.name.charAt(0).toUpperCase() + s.name.slice(1)}
               </option>
             ))}
           </select>
