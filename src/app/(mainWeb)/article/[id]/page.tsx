@@ -1,23 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { use } from 'react';
+import { Article } from "../page";
+import { timeAgo } from "@/lib/helper";
 
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-}
-
-const ReadArticle = ({ params }: { params: { id: string } }) => {
+const ReadArticle = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = use(params);
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`/api/articles/${params.id}`);
+        const response = await fetch(`/api/articles?id=${id}`);
         if (response.ok) {
           const data = await response.json();
           setArticle(data);
@@ -29,10 +25,10 @@ const ReadArticle = ({ params }: { params: { id: string } }) => {
       }
     };
 
-    if (params.id) {
+    if (id) {
       fetchArticle();
     }
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -60,16 +56,20 @@ const ReadArticle = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <Card className="p-8">
+      <div className="p-8">
         <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
-        <p className="text-sm text-gray-500 mb-8">
-          {new Date(article.createdAt).toLocaleDateString()}
-        </p>
+        <div className="flex gap-3">
+          <p className="text-gray-800 font-semibold">By: {article.author?.fname} {article.author?.lname}</p>
+          <p>-</p>
+          <p className="text-sm text-gray-500 mb-8">
+            Posted: {timeAgo(new Date(article.createdAt))}
+          </p>
+        </div>
         <div
           className="prose max-w-none"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
-      </Card>
+      </div>
     </div>
   );
 };

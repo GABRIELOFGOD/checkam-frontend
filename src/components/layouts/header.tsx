@@ -50,7 +50,6 @@ const Header = () => {
         </div>
         <div className="hidden md:flex"><MenuList /></div>
       </div>
-
     </div>
   )
 }

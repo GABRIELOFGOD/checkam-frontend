@@ -6,6 +6,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { useUser } from "./user-provider";
 import { usePathname, useRouter } from "next/navigation";
 import { IBill } from "@/models/bill";
+import Loading from "@/components/general-loader";
 
 export type UserDataProp = {
   data: IUser[];
@@ -83,6 +84,14 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     }
     
   }, [isLoaded]);
+
+  if (!isLoaded || !adminLoads) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Loading text="Please wait as we load your data..." />
+      </div>
+    )
+  }
 
   return (
     <AdminContext.Provider value={{ users, adminLoads, bills }}>

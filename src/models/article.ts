@@ -5,11 +5,13 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: [true, "Title is required"],
     trim: true,
+    unique: true,
     minLength: [3, "Title must be at least 3 characters long"],
   },
   content: {
     type: String,
     required: [true, "Content is required"],
+    unique: true,
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,

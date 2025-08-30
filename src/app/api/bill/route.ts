@@ -10,8 +10,8 @@ import { UploadApiResponse } from "cloudinary"
 export async function GET(request: NextRequest) {
   try {
     await connectToDatabase()
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get("id")
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
 
     if (id) {
       const bill = await Bill.findOne({ _id: id });
@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   await connectToDatabase()
   
-  const { searchParams } = new URL(request.url)
-  const id = searchParams.get("id")
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
   
   if (!id) {
     return NextResponse.json({ message: "Bill id is required" }, { status: 400 })

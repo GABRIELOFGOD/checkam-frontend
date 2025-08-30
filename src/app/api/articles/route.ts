@@ -62,16 +62,77 @@ export async function GET(req: Request) {
     // Get query parameters
     const { searchParams } = new URL(req.url);
     const limit = Number(searchParams.get("limit")) || undefined;
+    const id = searchParams.get("id");
+
+    if (id) {
+      const articles = await Article.findById(id)
+      .populate("author", "fname lname email");
+
+      return NextResponse.json(articles);
+    }
 
     // Get articles with optional limit
     const articles = await Article.find()
       .sort({ createdAt: -1 })
       .limit(limit || 0)
-      .populate("author", "name email");
+      .populate("author", "fname lname email");
 
     return NextResponse.json(articles);
   } catch (error) {
     console.error("Error fetching articles:", error);
+    return NextResponse.json(
+      { error: error || "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    await connectToDatabase();
+    const authHeader = req.headers.get("authorization")
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Authorization token missing or invalid" }, { status: 401 })
+    }
+
+    const token = authHeader.split(" ")[1]
+    let decoded
+    try {
+      decoded = verify(token, process.env.JWT_SECRET!) as { email: string }
+    } catch {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    }
+
+    const user = await User.findOne({ email: decoded.email });
+    if (!user || user.role !== "admin") {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 })
+    }
+    
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    const { title, content } = await req.json();
+
+    // Validate input
+    if (!id || !title || !content) {
+      return NextResponse.json(
+        { error: "ID, title, and content are required" },
+        { status: 400 }
+      );
+    }
+
+    // Update article
+    const article = await Article.findByIdAndUpdate(id, {
+      title,
+      content,
+    });
+
+    if (!article) {
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(article, { status: 200 });
+  } catch (error) {
+    console.error("Error updating article:", error);
     return NextResponse.json(
       { error: error || "Internal Server Error" },
       { status: 500 }

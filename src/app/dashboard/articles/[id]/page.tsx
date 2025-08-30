@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -11,14 +11,16 @@ import Link from "@tiptap/extension-link";
 import Color from "@tiptap/extension-color";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import MenuBar from "@/components/menubar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Loading from "@/components/general-loader";
 
-const CreateArticlePage = () => {
+const EditArticlePage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = use(params);
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
+  const [gettingData, setGettingData] = useState<boolean>(true);
 
   const editor = useEditor({
     extensions: [
@@ -38,7 +40,7 @@ const CreateArticlePage = () => {
           "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
       },
     },
-    immediatelyRender: false, // Add this to fix SSR hydration issues
+    immediatelyRender: false,
   });
 
   const [error, setError] = useState("");
@@ -53,8 +55,8 @@ const CreateArticlePage = () => {
     const content = editor.getHTML();
 
     try {
-      const response = await fetch("/api/articles", {
-        method: "POST",
+      const response = await fetch(`/api/articles?id=${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -67,7 +69,7 @@ const CreateArticlePage = () => {
       if (response.ok) {
         setTitle("");
         editor.commands.setContent("");
-        toast.success("Article created successfully!");
+        toast.success("Article updated successfully!");
         router.push(`/dashboard/articles`);
       } else {
         setError(data.error || "Failed to create article");
@@ -80,11 +82,39 @@ const CreateArticlePage = () => {
     }
   };
 
+  useEffect(() => {
+    if (editor) {
+      const fetchArticle = async () => {
+        try {
+          const response = await fetch(`/api/articles?id=${id}`);
+          const data = await response.json();
+          setTitle(data.title);
+          editor.commands.setContent(data.content);
+        } catch (error) {
+          console.log(error);
+          toast.error("Failed to fetch article data");
+        } finally {
+          setGettingData(false);
+        }
+      };
+
+      fetchArticle();
+    }
+  }, [editor, id]);
+
+  if (gettingData) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loading text="Getting article data..." />
+      </div>
+    )
+  }
+
   return (
-    <Card className="p-6 max-w-5xl mx-auto">
+    <div className="flex flex-col gap-5 p-5">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold mb-6">Create New Article</h1>
+          <h1 className="text-2xl font-bold mb-6">Edit Article</h1>
           <Input
             type="text"
             placeholder="Article Title"
@@ -111,11 +141,10 @@ const CreateArticlePage = () => {
         </div>
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <Button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create Article"}
+          {loading ? "Updating..." : "Update Article"}
         </Button>
       </form>
-    </Card>
-  );
-};
-
-export default CreateArticlePage;
+    </div>
+  )
+}
+export default EditArticlePage;
