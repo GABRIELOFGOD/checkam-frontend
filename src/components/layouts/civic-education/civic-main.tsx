@@ -14,7 +14,8 @@ const CivicMain = () => {
         title='Civic Education Portal'
         short='Learn how the government works and how you can take part in it. When you know your rights and responsibilities, you can make better decisions and hold your leaders accountable.'
         searchState={civicSearch}
-        searchChange={setCivicSearch  }
+        searchChange={setCivicSearch}
+        image='/images/civic-education.jpg'
       />
 
       <InfographArticles />

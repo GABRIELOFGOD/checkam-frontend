@@ -41,10 +41,11 @@ const LegislatureMain = () => {
   return (
     <div className="flex flex-col gap-5">
       <PagesTop
-        title='Legislature'
+        title='Legislators'
         short='Meet the representatives shaping the future of Osun State. Explore their profiles, track their performance, and engage with their work.'
         searchState={legislatureSearch}
         searchChange={setLegislatureSearch}
+        image='/images/legislators.heic'
       />
 
       <LegislatorMapper legislators={allLegislatures} />

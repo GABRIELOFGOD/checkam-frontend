@@ -60,6 +60,7 @@ const Bills = () => {
             searchState={billSearch}
             searchChange={setBillSearch}
             gotSearch={false}
+            image='/images/bill.heic'
           />
           <div className="flex flex-col gap-3 md:flex-row">
             <div

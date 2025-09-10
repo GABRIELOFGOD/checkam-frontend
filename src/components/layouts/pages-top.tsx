@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
 const PagesTop = ({
@@ -6,6 +7,7 @@ const PagesTop = ({
   searchState,
   searchChange,
   short,
+  image,
   gotSearch = true
 }: {
   title:  string,
@@ -13,12 +15,22 @@ const PagesTop = ({
   searchChange: Dispatch<SetStateAction<string>>,
   short: string,
   gotSearch?: boolean
+  image?: string
 }) => {
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex gap-2 flex-col">
-        <p className='text-2xl md:text-4xl font-extrabold'>{title}</p>
-        <p className='text-muted text-sm'>{short}</p>
+      <div className="flex gap-2 flex-col relative py-20 px-6">
+        {image && (
+          <Image
+            src={image}
+            alt="page top image"
+            fill
+            className="object-cover object-center rounded-lg opacity-40 absolute top-0 left-0"
+            priority
+          />
+        )}
+        <p className='text-2xl md:text-4xl font-extrabold z-40'>{title}</p>
+        <p className='text-muted text-sm z-40'>{short}</p>
       </div>
       {gotSearch && (
         <div
