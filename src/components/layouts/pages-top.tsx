@@ -42,7 +42,7 @@ const PagesTop = ({
             placeholder="Search"
             className="h-full w-full border-none outline-none"
             value={searchState}
-            onChange={e => searchChange(e.target.value)}
+            onChange={searchChange ? (e) => searchChange(e.target.value) : () => {}}
           />
         </div>
       )}
