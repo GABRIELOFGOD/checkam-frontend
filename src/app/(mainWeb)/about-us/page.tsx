@@ -1,15 +1,26 @@
+import PagesTop from '@/components/layouts/pages-top';
+
 const AboutUs = () => {
   return (
     <div className="px-3 md:px-0">
       <div className="py-10 md:py-20 container mx-auto flex flex-col gap-16 md:gap-24">
 
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto">
+        {/* <div className="text-center max-w-2xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">About Us</h1>
           <p className="text-gray-600">
             Learn more about our mission, vision, and the values that drive us.
           </p>
-        </div>
+        </div> */}
+
+        <PagesTop
+          title='About us'
+          // short='We want to hear from you. Your ideas, questions, and complaints help us improve.'
+          // searchState={billSearch}
+          // searchChange={setBillSearch}
+          gotSearch={false}
+          image='/images/bill.heic'
+        />
 
         {/* Mission & Vision */}
         <div className="grid md:grid-cols-2 gap-8">

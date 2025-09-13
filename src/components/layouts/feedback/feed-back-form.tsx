@@ -167,6 +167,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { isError } from "@/lib/helper";
+import PagesTop from "../pages-top";
 
 const FeedbackForm = () => {
   const [name, setName] = useState("");
@@ -230,13 +231,24 @@ const FeedbackForm = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 w-full md:w-[700px] mx-auto">
-      <div>
+    // <div className="flex flex-col gap-5 w-full md:w-[700px] mx-auto">
+    <div>
+      <div className="flex flex-col gap-10">
+        <div className="flex gap-3 flex-col">
+      {/* <div>
         <h1 className="text-2xl font-bold">Feedback zone</h1>
         <p className="text-gray-500">
           We want to hear from you. Your ideas, questions, and complaints help us improve.
         </p>
-      </div>
+      </div> */}
+      <PagesTop
+        title='Feedbacks'
+        short='We want to hear from you. Your ideas, questions, and complaints help us improve.'
+        // searchState={billSearch}
+        // searchChange={setBillSearch}
+        gotSearch={false}
+        image='/images/bill.heic'
+      />
 
       <div className="p-3 shadow-sm rounded-md border border-border">
         <div className="mb-5">
@@ -314,6 +326,8 @@ const FeedbackForm = () => {
             </Button>
           </div>
         </form>
+      </div>
+      </div>
       </div>
     </div>
   );

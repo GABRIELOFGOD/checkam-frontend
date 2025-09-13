@@ -11,9 +11,9 @@ const PagesTop = ({
   gotSearch = true
 }: {
   title:  string,
-  searchState: string,
-  searchChange: Dispatch<SetStateAction<string>>,
-  short: string,
+  searchState?: string,
+  searchChange?: Dispatch<SetStateAction<string>>,
+  short?: string,
   gotSearch?: boolean
   image?: string
 }) => {
