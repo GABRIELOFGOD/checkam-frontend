@@ -120,7 +120,7 @@ const LegislatorProfileComp = ({ id }: { id: string }) => {
             </div>
 
           <div>
-            <h2 className="text-xl font-bold">Projects</h2>
+            <h2 className="text-xl font-bold mb-5 mt-10">Bill Proposed</h2>
             {projects.length > 0 ? (
               <ul className="list-disc pl-5">
                 {projects.map((project, index) => (

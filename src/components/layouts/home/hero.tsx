@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hero = () => {
+  
   return (
     // <div className="h-fit md:h-[90vh] w-full flex justify-center items-center flex-col gap-5 md:py-20 py-40 bg-radial from-secondary/50 to-secondary/90 text-white px-5 md:px-20">
     //   <div className="flex flex-col gap-2 text-center">
@@ -34,13 +36,19 @@ const Hero = () => {
               <Button
                 size={"lg"}
                 className="shadow-md bg-secondary w-fit hover:bg-secondary/80"
-              >Track Bills</Button>
+              >
+                <Link href={"/bills"}>
+                  Track Bills
+                </Link>
+              </Button>
               <Button
                 variant={"outline"}
                 className="text-black shadow-md"
                 size={"lg"}
               >
-                Track Bills
+                <Link href={"/article"}>
+                  Join the Discussion
+                </Link>
               </Button>
             </div>
           </div>

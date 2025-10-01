@@ -1,12 +1,32 @@
+"use client";
+
 import { File, Hospital, LucideInspect, User } from "lucide-react";
 import HomeCard from "./home-card";
 
+import { useGlobal } from "@/hooks/use-global";
+import { useEffect, useState } from "react";
+
 const CardSection = () => {
+  const [homeInfo, setHomeInfo] = useState<{ bills: number; legislators: number; users: number }>({
+    bills: 0,
+    legislators: 0,
+    users: 0
+  });
+  const { getHomeInfo } = useGlobal();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getHomeInfo();
+      setHomeInfo(data);
+    };
+    fetchData();
+  }, []);
+
   const cards = [
     {
       id: 1,
       title: "Bills Tracked",
-      value: "1,250+",
+      value: `${homeInfo.bills}${homeInfo.bills > 10 ? "+" : ""}`,
       sub: "Stay informed on the laws being made.",
       icon: File,
       className: "rounded-full bg-red-500/20 text-red-500/80 p-2"
@@ -14,21 +34,21 @@ const CardSection = () => {
     {
       id: 2,
       title: "Youth Engaged",
-      value: "8,570+",
+      value: `${homeInfo.users}${homeInfo.users > 100 ? "+" : ""}`,
       sub: "Join others taking action.",
       icon: User,
       className: "rounded-full bg-blue-500/20 text-blue-500/80 p-2"
     },
     {
-      id: 2,
+      id: 3,
       title: "Legislators monitored",
-      value: "220+",
+      value: `${homeInfo.legislators}`,
       sub: "Know who represents you.",
       icon: LucideInspect,
       className: "rounded-full bg-green-500/20 text-green-500/80 p-2"
     },
     {
-      id: 2,
+      id: 4,
       title: "Civic Actions Taken",
       value: "1,050",
       sub: "Be part of the change.",
@@ -38,7 +58,7 @@ const CardSection = () => {
   ]
   
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
+    <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5'>
       {cards.map((item) => (
         <HomeCard
           key={item.id}
