@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import Loading from "@/components/general-loader";
 import { timeAgo } from "@/lib/helper";
+import { Button } from "@/components/ui/button";
+import { Share } from "lucide-react";
 
 export interface Article {
   _id: string;
@@ -59,9 +61,33 @@ const AllArticles = () => {
               <div className="text-gray-600 mb-3 line-clamp-2"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
-              <p className="text-sm text-gray-400">
-                {timeAgo(new Date(article.createdAt))}
-              </p>
+              <div className="flex justify-between">
+                <p className="text-sm text-gray-400">
+                  {timeAgo(new Date(article.createdAt))}
+                </p>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-gray-600"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (navigator.share) {
+                      navigator.share({
+                        title: article.title,
+                        text: article.content.replace(/<[^>]*>/g, '').slice(0, 100) + '...',
+                        url: `${window.location.origin}/article/${article._id}`
+                      }).catch(console.error);
+                    } else {
+                      navigator.clipboard.writeText(`${window.location.origin}/article/${article._id}`)
+                        .then(() => alert('Link copied to clipboard!'))
+                        .catch(console.error);
+                    }
+                  }}
+                >
+                  <Share className="h-4 w-4" />
+                </Button>
+              </div>
             </Card>
           </Link>
         )) : (

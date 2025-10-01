@@ -7,6 +7,7 @@ import Link from "next/link";
 import Loading from "@/components/general-loader";
 import { Article } from "@/app/(mainWeb)/article/page";
 import { timeAgo } from "@/lib/helper";
+import { Share } from "lucide-react";
 
 const InfographArticles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -30,9 +31,9 @@ const InfographArticles = () => {
     fetchArticles();
   }, []);
 
-  const truncateContent = (content: string) => {
-    return content.replace(/<[^>]*>/g, "").slice(0, 150) + "...";
-  };
+  // const truncateContent = (content: string) => {
+  //   return content.replace(/<[^>]*>/g, "").slice(0, 150) + "...";
+  // };
 
   if (loading) {
     return (
@@ -55,13 +56,37 @@ const InfographArticles = () => {
         {articles.map((article) => (
           <Link href={`/article/${article._id}`} key={article._id}>
             <Card className="p-4 hover:shadow-lg transition-shadow">
-              <h3 className="font-semibold mb-2">{article.title}</h3>
-              <p className="text-sm text-gray-600">
-                {truncateContent(article.content)}
+              <h3 className="font-semibold mb-2 line-clamp-2">{article.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-3 md:line-clamp-5">
+                {article.content.replace(/<[^>]*>/g, '')}
               </p>
-              <p className="text-xs text-gray-400 mt-2">
-                {timeAgo(new Date(article.createdAt))}
-              </p>
+              <div className="flex justify-between">
+                <p className="text-xs text-gray-400 mt-2">
+                  {timeAgo(new Date(article.createdAt))}
+                </p>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-gray-600"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (navigator.share) {
+                      navigator.share({
+                        title: article.title,
+                        text: article.content.replace(/<[^>]*>/g, '').slice(0, 100) + '...',
+                        url: `${window.location.origin}/article/${article._id}`
+                      }).catch(console.error);
+                    } else {
+                      navigator.clipboard.writeText(`${window.location.origin}/article/${article._id}`)
+                        .then(() => alert('Link copied to clipboard!'))
+                        .catch(console.error);
+                    }
+                  }}
+                >
+                  <Share className="h-4 w-4" />
+                </Button>
+              </div>
             </Card>
           </Link>
         ))}
