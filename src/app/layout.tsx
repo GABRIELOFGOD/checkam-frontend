@@ -22,7 +22,14 @@ export const metadata: Metadata = {
   title: "Checkam! - Youth Centre for Legislative Accountability.",
   description: "Bridging the Youth–Government Gap with Legislative Transparency",
   openGraph: {
-    images: "/images/house.JPG",
+    images: [
+      {
+        url: "https://checkam.org/og-image.JPG", // image in /public
+        width: 1200,
+        height: 630,
+        alt: "Checkam! - Youth Centre for Legislative Accountability.",
+      },
+    ],
     title: "Checkam! - Youth Centre for Legislative Accountability.",
     description: "Bridging the Youth–Government Gap with Legislative Transparency",
   }
