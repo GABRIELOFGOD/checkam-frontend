@@ -19,8 +19,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Checkam!",
-  description: "Osun people involvement in government",
+  title: "Checkam! - Youth Centre for Legislative Accountability.",
+  description: "Bridging the Youth–Government Gap with Legislative Transparency",
+  openGraph: {
+    images: "/images/house.JPG",
+    title: "Checkam! - Youth Centre for Legislative Accountability.",
+    description: "Bridging the Youth–Government Gap with Legislative Transparency",
+  }
 };
 
 export default function RootLayout({
