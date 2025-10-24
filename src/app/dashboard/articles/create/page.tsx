@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -15,10 +15,30 @@ import { Card } from "@/components/ui/card";
 import MenuBar from "@/components/menubar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import NextImage from "next/image";
+import { useDropzone } from "react-dropzone";
 
 const CreateArticlePage = () => {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
+  const [articleImage, setArticleImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const onDropImage = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setArticleImage(file);
+      const reader = new FileReader();
+      reader.onload = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  }, []);
+
+  const { getRootProps: getImageRoot, getInputProps: getImageInput } = useDropzone({
+      onDrop: onDropImage,
+      multiple: false,
+      accept: { "image/*": [] },
+    });
 
   const editor = useEditor({
     extensions: [
@@ -53,13 +73,18 @@ const CreateArticlePage = () => {
     const content = editor.getHTML();
 
     try {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      if (articleImage) {
+        formData.append("image", articleImage);
+      }
+      
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const response = await fetch("/api/articles", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify({ title, content }),
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        body: formData,
       });
 
       const data = await response.json();
@@ -92,6 +117,27 @@ const CreateArticlePage = () => {
             onChange={(e) => setTitle(e.target.value)}
             className="mb-4"
           />
+
+          <div>
+            <div
+              {...getImageRoot()}
+              className="border-dashed border-2 rounded px-4 py-12 text-center cursor-pointer hover:bg-gray-50"
+            >
+              <input {...getImageInput()} />
+              <p>Drag & drop an image here, or click to select</p>
+            </div>
+            {imagePreview && (
+              <div className="relative w-full h-40 mt-2">
+                <NextImage
+                  src={imagePreview}
+                  alt="Preview"
+                  fill
+                  className="rounded border object-contain"
+                />
+              </div>
+            )}
+          </div>
+          
           <div className="border rounded-lg">
             {editor ? (
               <>

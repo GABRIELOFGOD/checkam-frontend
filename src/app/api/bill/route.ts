@@ -16,16 +16,16 @@ export async function GET(request: NextRequest) {
     if (id) {
       const bill = await Bill.findOne({ _id: id });
       if (!bill) {
-        return NextResponse.json({ message: "Bill not found" }, { status: 404 })
+        return NextResponse.json({ message: "Bill not found" }, { status: 404 });
       }
       return NextResponse.json(bill)
     } else {
-      const bills = await Bill.find()
-      return NextResponse.json(bills)
+      const bills = await Bill.find();
+      return NextResponse.json(bills);
     }
   } catch (error) {
     console.error("ERROR GET", error)
-    return NextResponse.json({ message: "Error fetching bills" }, { status: 500 })
+    return NextResponse.json({ message: "Error fetching bills" }, { status: 500 });
   }
 }
 
@@ -108,8 +108,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newBill, { status: 201 })
   } catch (error) {
-    console.error("Upload error:", error)
-    return NextResponse.json({ message: "Error creating bill", error }, { status: 500 })
+    console.error("Upload error:", error);
+    return NextResponse.json({ message: "Error creating bill", error }, { status: 500 });
   }
 }
 

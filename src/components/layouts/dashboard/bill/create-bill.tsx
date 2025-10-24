@@ -88,7 +88,6 @@ const CreateBill = () => {
 
       if (!response.ok) throw new Error("Failed to submit");
 
-      console.log("Submitted successfully");
       form.reset();
       setImagePreview(null);
       setFileName(null);

@@ -1,5 +1,4 @@
 import { IUser } from "@/models/user";
-import { Ellipsis } from "lucide-react";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -9,6 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { EllipsisIcon } from "lucide-react";
 
 const UserContentCard = ({ user }: { user: IUser }) => {
   return (
@@ -23,23 +24,35 @@ const UserContentCard = ({ user }: { user: IUser }) => {
               className="object-contain"
             />
           ) : (
-            <p className="text-xl font-extrabold">{user.fname.slice(0,1)}{user.lname.slice(0,1)}</p>
+            <p className="text-xl font-extrabold">
+              {user.fname.slice(0, 1)}
+              {user.lname.slice(0, 1)}
+            </p>
           )}
         </div>
         <div className="my-auto">
-          <p className="font-extrabold truncate">{user.fname} {user.lname}</p>
-          <p className="text-xs font-medium text-gray-500 truncate">{user.email}</p>
+          <p className="font-extrabold truncate">
+            {user.fname} {user.lname}
+          </p>
+          <p className="text-xs font-medium text-gray-500 truncate">
+            {user.email}
+          </p>
         </div>
       </div>
       <div className="my-auto relative">
         <DropdownMenu>
           <DropdownMenuTrigger className="my-auto hidden md:flex">
-            <button className="h-6 w-6 cursor-pointer rounded-full hover:bg-muted/40 bg-border duration-200 my-auto flex justify-center items-center">
-              <Ellipsis size={15} />
-            </button>
+            <Button
+              variant={"outline"}
+              className="rounded-full flex justify-center my-auto items-center h-7 w-7"
+            >
+              <EllipsisIcon size={12} />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel className="font-bold">Quick actions</DropdownMenuLabel>
+            <DropdownMenuLabel className="font-bold">
+              Quick actions
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View profile</DropdownMenuItem>
             <DropdownMenuItem>Block user</DropdownMenuItem>
@@ -47,6 +60,6 @@ const UserContentCard = ({ user }: { user: IUser }) => {
         </DropdownMenu>
       </div>
     </div>
-  )
-}
+  );
+};
 export default UserContentCard;

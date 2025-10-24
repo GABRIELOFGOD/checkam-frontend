@@ -5,6 +5,8 @@ import Loading from "@/components/general-loader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { timeAgo } from "@/lib/helper";
+import { ImageIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -54,8 +56,24 @@ const ArticlesPage = () => {
       <div className="grid gap-5 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
         {articles.length > 0 ? articles.map((article) => (
           <Link href={`/dashboard/articles/${article._id}`} key={article._id}>
-            <Card className="p-6 hover:shadow-lg transition-shadow h-full">
-              <h2 className="text-xl font-semibold mb-3 line-clamp-2">{article.title}</h2>
+            <Card className="p-3 hover:shadow-lg transition-shadow h-full">
+              <div className="w-full h-[250px] relative rounded-t-lg overflow-hidden">
+                {article.image ? (
+                  <Image
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <div className="w-full h-full flex justify-center items-center bg-gray-300/50 border-gray-400/70">
+                    <ImageIcon size={24} />
+                  </div>
+                )}
+                <div className="px-4 absolute bottom-0 text-white bg-black/50 w-full text-center">
+                  <h2 className="text-lg font-semibold line-clamp-2 z-40">{article.title}</h2>
+                </div>
+              </div>
               <div className="text-gray-600 mb-3 line-clamp-4"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />

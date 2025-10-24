@@ -3,6 +3,8 @@ import { connectToDatabase } from "@/config/database";
 import Article from "@/models/article";
 import { User } from "@/models/user";
 import { verify } from "jsonwebtoken";
+import cloudinary from "@/config/cloudinary";
+import { UploadApiResponse } from "cloudinary";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,7 +29,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 })
     }
 
-    const { title, content } = await req.json();
+    // const { title, content } = await req.json();
+    const formData = await req.formData();
+    
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+    const image = formData.get("image") as File | null;
 
     // Validate input
     if (!title || !content) {
@@ -37,10 +44,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Article image
+    let imageUrl = ""
+    if (image) {
+      const imageBuffer = Buffer.from(await image.arrayBuffer())
+      const uploadedImage = await new Promise<UploadApiResponse>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ resource_type: "image" }, (error, result) => {
+            if (error || !result) {
+              console.log("Error", error);
+              reject(error);
+            }
+            else resolve(result)
+          })
+          .end(imageBuffer)
+      });
+      imageUrl = uploadedImage.secure_url
+    }
+
     // Create article
     const article = await Article.create({
       title,
       content,
+      image: imageUrl,
       author: user._id,
     });
 

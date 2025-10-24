@@ -46,7 +46,7 @@ const Hero = () => {
                 className="text-black shadow-md"
                 size={"lg"}
               >
-                <Link href={"/article"}>
+                <Link href={"/discussion"}>
                   Join the Discussion
                 </Link>
               </Button>

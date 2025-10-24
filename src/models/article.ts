@@ -1,6 +1,15 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Model, Document } from "mongoose";
+import { IUser } from "./user";
 
-const articleSchema = new mongoose.Schema({
+export interface IArticle extends Document {
+  image?: string;
+  title: string;
+  content: string;
+  author: IUser;
+  status: "draft" | "published"
+}
+
+const ArticleSchema = new Schema({
   title: {
     type: String,
     required: [true, "Title is required"],
@@ -12,6 +21,9 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: [true, "Content is required"],
     unique: true,
+  },
+  image: {
+    type: String
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,15 +43,16 @@ const articleSchema = new mongoose.Schema({
     enum: ["draft", "published"],
     default: "published",
   },
-});
+}, { timestamps: true });
 
 // Update the updatedAt timestamp before saving
-articleSchema.pre("save", function (next) {
+ArticleSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();
 });
 
-const Article =
-  mongoose.models.Article || mongoose.model("Article", articleSchema);
+const Article: Model<IArticle> =
+  (mongoose.models.Article as Model<IArticle>) ||
+  mongoose.model<IArticle>("Article", ArticleSchema);
 
 export default Article;
