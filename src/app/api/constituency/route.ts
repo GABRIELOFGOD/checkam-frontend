@@ -99,3 +99,44 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ message: "Error creating bill", error }, { status: 500 });
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  await connectToDatabase()
+    
+  const authHeader = request.headers.get("authorization")
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json({ error: "Authorization token missing or invalid" }, { status: 401 })
+  }
+
+  const token = authHeader.split(" ")[1]
+  let decoded
+  try {
+    decoded = verify(token, process.env.JWT_SECRET!) as { email: string }
+  } catch {
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+  }
+
+  const user = await User.findOne({ email: decoded.email });
+  if (!user || user.role !== "admin") {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    const body = await request.json();
+    const { name } = body;
+    if (!name) return NextResponse.json({
+      message: "Enter new name to update"
+    }, { status: 400 });
+
+    await Constituency.findByIdAndUpdate(id, { name });
+
+    return NextResponse.json({
+      message: "Constituency name updated successfully"
+    }, { status: 200 });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return NextResponse.json({ message: "Error creating bill", error }, { status: 500 });
+  }
+}

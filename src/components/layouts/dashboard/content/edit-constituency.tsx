@@ -1,6 +1,6 @@
 const EditConstituency = () => {
   return (
-    <>EditConstituency</
+    <div>EditConstituency</div>
   )
 }
 export default EditConstituency;

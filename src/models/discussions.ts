@@ -1,7 +1,8 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import { IUser } from "./user";
-import { DiscussionComment } from "@/types/discussion";
+// import { DiscussionComment } from "@/types/discussion";
 import { IConstituency } from "./constituency";
+import { DiscussionComment } from "@/types/discussion";
 
 export interface IDiscussionType extends Document {
   postedBy: IUser;
