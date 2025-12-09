@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     });
     // push comment id into discussion.comments
     discussion.comments = discussion.comments || [];
-    discussion.comments.push(newComment._id as unknown as Types.ObjectId);
+    discussion.comments.push(newComment._id);
     await discussion.save();
     await discussion.save();
 
