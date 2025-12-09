@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 // import DiscussionDisplayCard from "./discussion-display-card";
 import { Loader2 } from "lucide-react";
-import DiscussionDisplayCard from "@/components/layouts/discussion/discussion-display-card";
+// import DiscussionDisplayCard from "@/components/layouts/discussion/discussion-display-card";
 import CreateDiscussionButton from "@/components/layouts/discussion/create-discussion-button";
 import { DisplayCardDiscussionType } from "../page";
 import DiscussionDisplaySingleCard from "@/components/layouts/discussion/discussion-display-single-card";
