@@ -4,7 +4,7 @@ import Discussion from "@/models/discussions";
 import Comment from "@/models/comment";
 import { authenticateRequest } from "@/lib/auth-utils";
 import { IUser } from "@/models/user";
-import { Types } from "mongoose";
+// import { Types } from "mongoose";
 
 export async function POST(request: NextRequest) {
   await connectToDatabase();
