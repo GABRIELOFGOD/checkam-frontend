@@ -4,6 +4,7 @@ import Discussion from "@/models/discussions";
 import Comment from "@/models/comment";
 import { authenticateRequest } from "@/lib/auth-utils";
 import { IUser } from "@/models/user";
+import { DiscussionComment } from "@/types/discussion";
 // import { Types } from "mongoose";
 
 export async function POST(request: NextRequest) {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
     });
     // push comment id into discussion.comments
     discussion.comments = discussion.comments || [];
-    discussion.comments.push(newComment._id);
+    discussion.comments.push(newComment as DiscussionComment);
     await discussion.save();
     await discussion.save();
 
