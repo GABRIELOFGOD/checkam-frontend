@@ -1,10 +1,15 @@
 "use client";
 import { IUser } from '@/models/user';
+import { ObjectId } from 'mongoose';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
+interface GlobalUser extends IUser {
+  _id: ObjectId;
+}
+
 type UserContextType = {
-  user: IUser | null;
-  setUser: (user: IUser | null) => void;
+  user: GlobalUser | null;
+  setUser: (user: GlobalUser | null) => void;
   isLoaded: boolean;
 };
 
@@ -15,7 +20,7 @@ type UserProviderProps = {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<GlobalUser | null>(null);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const getUser = async () => {
@@ -32,7 +37,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       const res = await req.json();
       if (!req.ok) throw new Error(res.error);
       if (res.error) throw new Error(res.error);
-      setUser(res.user as IUser);
+      setUser(res.user as GlobalUser);
 
     } catch (error: unknown) {
       if (error == typeof Error){

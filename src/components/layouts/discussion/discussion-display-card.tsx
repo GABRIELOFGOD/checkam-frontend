@@ -3,6 +3,7 @@ import { IDiscussionType } from "@/models/discussions";
 import { EllipsisIcon } from "lucide-react";
 import DiscussionActions from "./discussion-actions";
 import DiscussionImages from "./discussion-images";
+import Link from "next/link";
 
 const DiscussionDisplayCard = ({ discussion, id }: { discussion: IDiscussionType, id: string }) => {
   return (
@@ -21,13 +22,14 @@ const DiscussionDisplayCard = ({ discussion, id }: { discussion: IDiscussionType
         </Button>
       </div>
       <div className="flex flex-col gap-2">
-        <p className="text-gray-800 text-lg line-clamp-4 leading-6">{discussion.content}</p>
+        <Link href={`/discussion/${id}`} className="text-gray-800 text-lg line-clamp-4 leading-6">{discussion.content}</Link>
           {/* images show here: get image urls by discussion.images */}
         {discussion.images && (<DiscussionImages images={discussion.images} />)}
         <DiscussionActions
           id={id}
           comments={discussion.comments.length}
-          likes={discussion.likes.length}
+          likes={discussion.likes}
+          tags={discussion.tags.length}
         />
       </div>
     </div>

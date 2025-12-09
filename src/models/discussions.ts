@@ -7,7 +7,7 @@ import { DiscussionComment } from "@/types/discussion";
 export interface IDiscussionType extends Document {
   postedBy: IUser;
   content: string;
-  likes: IUser[];
+  likes: mongoose.Schema.Types.ObjectId[];
   comments: DiscussionComment[];
   constituencies: IConstituency[];
   images: string[];

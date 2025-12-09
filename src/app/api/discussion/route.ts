@@ -211,11 +211,11 @@ export async function GET(request: NextRequest) {
         // .populate("likes")
         // .populate("likes", "fname lname email")
         // .populate("comments"
-          // populate: { path: "by", select: "fname lname image role email" },
+        // populate: { path: "by", select: "fname lname image role email" },
         // )
-        .populate("constituencies")
-        // .populate("tags")
-        // .populate("notableComments");
+        .populate("constituencies");
+      // .populate("tags")
+      // .populate("notableComments");
       return NextResponse.json(discussions.reverse(), { status: 200 });
     }
   } catch (error: unknown) {
@@ -239,7 +239,9 @@ export async function PUT(request: NextRequest) {
   // Use centralized auth util
   const { authenticateRequest } = await import("@/lib/auth-utils");
   type AuthResult = { error?: NextResponse } | { user: IUser };
-  const authResult = (await authenticateRequest(request as NextRequest)) as AuthResult;
+  const authResult = (await authenticateRequest(
+    request as NextRequest
+  )) as AuthResult;
   if ("error" in authResult && authResult.error) return authResult.error;
 
   const { user } = authResult as { user: IUser };
@@ -291,9 +293,6 @@ export async function PUT(request: NextRequest) {
     discussion.likes = likesArr as IUser[];
 
     await discussion.save();
-
-    console.log(`Discussion ${action}`)
-
     return NextResponse.json(
       {
         message: `Discussion ${action}`,

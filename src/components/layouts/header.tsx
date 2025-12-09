@@ -17,6 +17,7 @@ const Header = () => {
       <div className="flex gap-5 justify-between py-2  container mx-auto items-center">
         <Link
           href="/"
+          className="my-auto"
         >
           <Image
             src={"/brand/logo.png"}
@@ -26,7 +27,6 @@ const Header = () => {
           />
         </Link>
         <div className="md:hidden flex my-auto">
-          
           <Sheet>
             <SheetTrigger>
               <Menu size={20} />

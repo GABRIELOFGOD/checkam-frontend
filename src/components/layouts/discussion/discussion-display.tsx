@@ -33,16 +33,16 @@ const DiscussionDisplay = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[200px] flex justify-center items-center">
+      <div className="w-full h-[500px] flex justify-center items-center">
         <Loader2 className="animate-spin" />
       </div>
     )
   }
   
   return (
-    <div className="flex w-full md:gap-5 h-full">
+    <div className="flex w-full md:gap-5 h-full relative">
       <div className="lg:flex flex-col p-5 hidden w-[25%]"></div>
-      <div className="h-full w-full flex flex-col gap-3 relative h-full md:overflow-y-auto px-3">
+      <div className="h-full w-full flex flex-col gap-3 relative md:overflow-y-auto px-3 md:px-10">
         {discussions.map((disc, id) => (
           <DiscussionDisplayCard
             id={disc._id}
@@ -50,8 +50,8 @@ const DiscussionDisplay = () => {
             discussion={disc}
           />
         ))}
-        <CreateDiscussionButton />
       </div>
+      <CreateDiscussionButton />
       <div className="lg:flex flex-col p-5 hidden w-[25%]"></div>
     </div>
   )
