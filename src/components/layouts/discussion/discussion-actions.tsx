@@ -54,6 +54,9 @@ useEffect(() => {
       <Button
         variant={"ghost"}
         className="flex gap-2 h-full"
+        onClick={() => {
+          router.push(`/discussion/${id}#comment`);
+        }}
       >
         {comments}
         <MessageCircleIcon />

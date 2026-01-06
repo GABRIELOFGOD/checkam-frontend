@@ -41,8 +41,7 @@ export async function POST(request: NextRequest) {
     });
     // push comment id into discussion.comments
     discussion.comments = discussion.comments || [];
-    discussion.comments.push(newComment as DiscussionComment);
-    await discussion.save();
+    // discussion.comments.push(newComment);
     await discussion.save();
 
     return NextResponse.json(newComment, { status: 201 });

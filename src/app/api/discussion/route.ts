@@ -194,7 +194,16 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get("id");
 
     if (id) {
-      const discussion = await Discussion.findOne({ _id: id });
+      const discussion = await Discussion.findOne({ _id: id })
+      .populate("postedBy")
+        // .populate("likes")
+        // .populate("likes", "fname lname email")
+        // .populate("comments"
+        // populate: { path: "by", select: "fname lname image role email" },
+        // )
+        .populate("constituencies");
+      // .populate("tags")
+      // .populate("notableComments");
       if (!discussion)
         return NextResponse.json(
           {
@@ -210,9 +219,9 @@ export async function GET(request: NextRequest) {
         .populate("postedBy")
         // .populate("likes")
         // .populate("likes", "fname lname email")
-        // .populate("comments"
+        .populate("comments"
         // populate: { path: "by", select: "fname lname image role email" },
-        // )
+        )
         .populate("constituencies");
       // .populate("tags")
       // .populate("notableComments");

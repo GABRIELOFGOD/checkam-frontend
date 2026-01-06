@@ -1,13 +1,24 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { IDiscussionType } from "@/models/discussions";
 import { EllipsisIcon } from "lucide-react";
 import DiscussionActions from "./discussion-actions";
 import DiscussionImages from "./discussion-images";
 import Link from "next/link";
+import { Textarea } from "@/components/ui/textarea";
+import { useDiscussionComment } from "@/hooks/use-comment";
+import { useState } from "react";
 
 const DiscussionDisplaySingleCard = ({ discussion, id }: { discussion: IDiscussionType, id: string }) => {
+  const { newComment } = useDiscussionComment();
+
+  const [comment, setComment] = useState<string>("");
+  
+  // console.log("Single discussion", discussion);
   return (
-      <div className="flex flex-col gap-3 rounded-sm shadow-sm p-4">
+      <div>
+        <div className="flex flex-col gap-3 rounded-sm shadow-sm p-4">
         <div className="flex justify-between gap-5">
           <div className="flex flex-col gap-[1px]">
             <p className="font-bold truncate">{discussion.postedBy.fname} {discussion.postedBy.lname}</p>
@@ -32,6 +43,38 @@ const DiscussionDisplaySingleCard = ({ discussion, id }: { discussion: IDiscussi
             tags={discussion.tags.length}
           />
         </div>
+      </div>
+
+      <div id="comment" className="mt-5 w-full flex flex-col gap-3">
+        <h3 className="text-lg font-semibold">Comments</h3>
+        <div>
+          <div className="flex flex-col gap-2">
+            <Textarea
+              className="w-full h-32 border border-dashed border-gray-300 rounded-md flex justify-center items-center"
+              placeholder="Write your comment here..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  newComment(id, comment || "");
+                  setComment("");
+                }
+              }}
+            />
+            <Button
+              className="self-end"
+              onClick={() => {
+                newComment(id, comment || "");
+                setComment("");
+              }}
+            >Post Comment</Button>
+          </div>
+          <div>
+            <p className="text-gray-400 italic font-semibold text-center my-5">No comments yet!</p>
+          </div>
+        </div>
+      </div>
       </div>
     )
 }

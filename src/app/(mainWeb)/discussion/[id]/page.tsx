@@ -17,7 +17,7 @@ const SingleDiscussion = ({ params }: { params: Promise<{ id: string }> }) => {
     const getDiscussions = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("/api/discussion");
+        const response = await fetch(`/api/discussion?id=${id}`);
         const data = await response.json() as DisplayCardDiscussionType;
         setDiscussion(data);
       } catch (error) {
